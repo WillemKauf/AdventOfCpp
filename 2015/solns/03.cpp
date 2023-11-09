@@ -10,6 +10,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_03 : public Advent_type {
   static constexpr int year     = 2015;
   static constexpr int date     = 3;
@@ -81,3 +83,5 @@ struct day_03 : public Advent_type {
     return std::to_string(seen.size());
   }
 };
+
+};  // namespace AOC2015

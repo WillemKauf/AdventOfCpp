@@ -11,6 +11,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_21 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 21;
@@ -40,16 +42,18 @@ struct day_21 : public Advent_type {
   struct Stats {
     Stats() = default;
 
-    Stats(const Item& item) : hp(100), damage(item.damage), armor(item.armor) {}
+    Stats(const Item& item) : hp(100), damage(item.damage), armor(item.armor), cost(item.cost) {}
 
     void operator+=(const Item& item) {
       damage += item.damage;
       armor += item.armor;
+      cost += item.cost;
     }
 
     int hp;
     int damage;
     int armor;
+    int cost;
   };
 
   using ShopMap_type = std::unordered_map<ItemType, std::vector<Item>>;
@@ -144,14 +148,13 @@ struct day_21 : public Advent_type {
             player += armor;
             player += *ringItOne;
             player += *ringItTwo;
-            const auto cost = weapon.cost + armor.cost + ringItOne->cost + ringItTwo->cost;
 
             if constexpr (wantToWin) {
-              if (cost > money) {
+              if (player.cost > money) {
                 continue;
               }
             } else {
-              if (cost < money) {
+              if (player.cost < money) {
                 continue;
               }
             }
@@ -208,3 +211,5 @@ struct day_21 : public Advent_type {
     return std::to_string(l);
   }
 };
+
+};  // namespace AOC2015

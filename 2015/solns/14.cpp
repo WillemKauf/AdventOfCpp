@@ -9,6 +9,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_14 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 14;
@@ -83,3 +85,5 @@ struct day_14 : public Advent_type {
         })->second);
   }
 };
+
+};  // namespace AOC2015

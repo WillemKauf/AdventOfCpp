@@ -1,20 +1,17 @@
 /////////////////
-//// md5 lib
-/////////////////
-#include <openssl/md5.h>
-
-/////////////////
 //// std
 /////////////////
-#include <iomanip>
 #include <unordered_set>
 #include <utility>
 
 /////////////////
 //// local
 /////////////////
+#include "../common/common.h"
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
+
+namespace AOC2015 {
 
 struct day_04 : public Advent_type {
   static constexpr int year = 2015;
@@ -25,15 +22,9 @@ struct day_04 : public Advent_type {
   auto getIndex(int numZeros, int startIndex = 0) {
     const auto compareString = std::string(numZeros, '0');
     for (int i = startIndex; true; ++i) {
-      unsigned char hashBuf[MD5_DIGEST_LENGTH];
-      const auto toHash = input + std::to_string(i);
-      MD5(reinterpret_cast<const unsigned char*>(toHash.c_str()), toHash.size(), hashBuf);
-      std::ostringstream hashStream;
-      hashStream << std::hex << std::setfill('0');
-      for (const auto& c : hashBuf) {
-        hashStream << std::setw(2) << static_cast<long long>(c);
-      }
-      if (hashStream.str().substr(0, numZeros) == compareString) {
+      const auto toHash  = input + std::to_string(i);
+      const auto hashStr = Hash::GetMD5Hash(toHash);
+      if (hashStr.substr(0, numZeros) == compareString) {
         return std::make_pair(i, std::to_string(i));
       }
     }
@@ -48,3 +39,5 @@ struct day_04 : public Advent_type {
 
   std::string part_2() override { return getIndex(6, startingIndex).second; }
 };
+
+};  // namespace AOC2015

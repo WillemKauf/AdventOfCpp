@@ -10,6 +10,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_08 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 8;
@@ -47,19 +49,20 @@ struct day_08 : public Advent_type {
   }
 
   std::string part_1() override {
-    return std::to_string(std::accumulate(
-        input.begin(), input.end(), 0,
-        [&](int sm, std::string_view stringView) { return sm + stringView.size() - getNumberChars(stringView); }));
+    return std::to_string(
+        std::accumulate(input.begin(), input.end(), 0, [&](int sm, std::string_view stringView) {
+          return sm + stringView.size() - getNumberChars(stringView);
+        }));
   }
 
   std::string encodeString(std::string_view stringView) {
     std::string newString = "\"";
-    for(const auto& c : stringView){
-      if(c == '"'){
+    for (const auto& c : stringView) {
+      if (c == '"') {
         newString += "\\\"";
-      }else if(c == '\\'){
+      } else if (c == '\\') {
         newString += "\\\\";
-      }else{
+      } else {
         newString += c;
       }
     }
@@ -68,8 +71,11 @@ struct day_08 : public Advent_type {
   }
 
   std::string part_2() override {
-    return std::to_string(std::accumulate(
-        input.begin(), input.end(), 0,
-        [&](int sm, std::string_view stringView) { return sm + encodeString(stringView).size() - stringView.size(); }));
+    return std::to_string(
+        std::accumulate(input.begin(), input.end(), 0, [&](int sm, std::string_view stringView) {
+          return sm + encodeString(stringView).size() - stringView.size();
+        }));
   }
 };
+
+};  // namespace AOC2015

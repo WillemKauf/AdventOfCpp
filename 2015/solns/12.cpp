@@ -9,6 +9,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_12 : public Advent_type {
   using json                = nlohmann::json;
   static constexpr int year = 2015;
@@ -41,7 +43,7 @@ struct day_12 : public Advent_type {
         }
         sm += jsonRecurse<ignoreRed>(v);
       }
-    }else if (j.is_number()) {
+    } else if (j.is_number()) {
       sm += j.template get<int>();
     }
     return sm;
@@ -51,3 +53,5 @@ struct day_12 : public Advent_type {
 
   std::string part_2() override { return std::to_string(jsonRecurse<true>(input)); }
 };
+
+};  // namespace AOC2015

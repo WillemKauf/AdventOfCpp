@@ -15,6 +15,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_07 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 7;
@@ -226,3 +228,5 @@ struct day_07 : public Advent_type {
     return std::to_string(wireMap.at("a"));
   }
 };
+
+};  // namespace AOC2015

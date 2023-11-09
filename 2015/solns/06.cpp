@@ -14,6 +14,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_06 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 6;
@@ -122,3 +124,5 @@ struct day_06 : public Advent_type {
     return std::to_string(std::accumulate(grid.begin(), grid.end(), 0));
   }
 };
+
+};  // namespace AOC2015

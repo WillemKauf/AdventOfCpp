@@ -12,6 +12,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_19 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 19;
@@ -26,7 +28,6 @@ struct day_19 : public Advent_type {
 
   using Map_type =
       std::map<std::string, std::set<std::string, cmpByStringLength>, cmpByStringLength>;
-  // using Map_type = std::unordered_map<std::string, std::unordered_set<std::string>>;
 
   struct Input {
     Map_type replacementMap;
@@ -106,55 +107,57 @@ struct day_19 : public Advent_type {
   };
 
   std::string part_2() override {
-    //const Input input                   = parseInput<true>();
-    //const Map_type& replacementMap      = input.replacementMap;
-    //const std::string& medicineMolecule = input.medicineMolecule;
+    // const Input input                   = parseInput<true>();
+    // const Map_type& replacementMap      = input.replacementMap;
+    // const std::string& medicineMolecule = input.medicineMolecule;
     //// std::priority_queue<State, std::vector<State>, std::greater<State>> pq;
-    //auto molecule = medicineMolecule;
-    //while (molecule != "e") {
-    //  std::cout << molecule << '\n';
-    //  for (const auto& [mol, repSet] : replacementMap) {
-    //    for (const auto& repMol : repSet) {
-    //      int searchIndex = molecule.find(mol);
-    //      if (searchIndex != std::string::npos) {
-    //        molecule = molecule.substr(0, searchIndex) + repMol +
-    //                   molecule.substr(searchIndex + mol.size());
-    //      }
-    //    }
-    //  }
-    //}
-    // pq.emplace(medicineMolecule, 0);
-    // int minSteps              = std::numeric_limits<int>::max();
-    // const std::string destMol = "e";
-    // std::unordered_set<std::string> seen;
-    // while (!pq.empty()) {
-    //   const auto curr = std::move(pq.top());
-    //   pq.pop();
-    //   if (curr.currMolecule == destMol) {
-    //     minSteps = std::min(minSteps, curr.numSteps);
-    //     continue;
-    //   }
-    //   if (curr.numSteps >= minSteps) {
-    //     continue;
-    //   }
-    //   if (seen.contains(curr.currMolecule)) {
-    //     continue;
-    //   }
-    //   std::cout << curr.currMolecule << '\n';
-    //   seen.insert(curr.currMolecule);
-    //   auto newMolecule = curr.currMolecule;
+    // auto molecule = medicineMolecule;
+    // while (molecule != "e") {
+    //   std::cout << molecule << '\n';
     //   for (const auto& [mol, repSet] : replacementMap) {
     //     for (const auto& repMol : repSet) {
-    //       int searchIndex = newMolecule.find(mol);
+    //       int searchIndex = molecule.find(mol);
     //       if (searchIndex != std::string::npos) {
-    //         newMolecule = newMolecule.substr(0, searchIndex) + repMol +
-    //                       newMolecule.substr(searchIndex + mol.size());
+    //         molecule = molecule.substr(0, searchIndex) + repMol +
+    //                    molecule.substr(searchIndex + mol.size());
     //       }
     //     }
     //   }
-    //   pq.emplace(std::move(newMolecule), curr.numSteps + 1);
     // }
-    // return std::to_string(minSteps);
+    //  pq.emplace(medicineMolecule, 0);
+    //  int minSteps              = std::numeric_limits<int>::max();
+    //  const std::string destMol = "e";
+    //  std::unordered_set<std::string> seen;
+    //  while (!pq.empty()) {
+    //    const auto curr = std::move(pq.top());
+    //    pq.pop();
+    //    if (curr.currMolecule == destMol) {
+    //      minSteps = std::min(minSteps, curr.numSteps);
+    //      continue;
+    //    }
+    //    if (curr.numSteps >= minSteps) {
+    //      continue;
+    //    }
+    //    if (seen.contains(curr.currMolecule)) {
+    //      continue;
+    //    }
+    //    std::cout << curr.currMolecule << '\n';
+    //    seen.insert(curr.currMolecule);
+    //    auto newMolecule = curr.currMolecule;
+    //    for (const auto& [mol, repSet] : replacementMap) {
+    //      for (const auto& repMol : repSet) {
+    //        int searchIndex = newMolecule.find(mol);
+    //        if (searchIndex != std::string::npos) {
+    //          newMolecule = newMolecule.substr(0, searchIndex) + repMol +
+    //                        newMolecule.substr(searchIndex + mol.size());
+    //        }
+    //      }
+    //    }
+    //    pq.emplace(std::move(newMolecule), curr.numSteps + 1);
+    //  }
+    //  return std::to_string(minSteps);
     return "Unimplemented.";
   }
 };
+
+};  // namespace AOC2015

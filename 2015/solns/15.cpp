@@ -9,6 +9,8 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_15 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 15;
@@ -81,3 +83,5 @@ struct day_15 : public Advent_type {
 
   std::string part_2() override { return std::to_string(recursiveSolve<true>(0, maxTsp, {})); }
 };
+
+};  // namespace AOC2015

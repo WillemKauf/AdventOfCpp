@@ -12,13 +12,15 @@
 #include "../common/common.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_18 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 18;
 
   const std::vector<std::vector<char>> input = read_lines_vector(year, date);
   const int n                                = input.size();
-  static constexpr auto ddirs                = getAllCardinalDirs<GridDirection::WithDiagonals>();
+  static constexpr auto ddirs                = Grid::GetAllCardinalDirs<Grid::GridDirection::WithDiagonals>();
 
   template <typename T>
   auto lightFunction(char value, const T& neighbors) const {
@@ -74,3 +76,5 @@ struct day_18 : public Advent_type {
 
   std::string part_2() override { return std::to_string(simulateSteps<true>()); }
 };
+
+};  // namespace AOC2015

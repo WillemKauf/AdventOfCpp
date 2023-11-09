@@ -12,9 +12,11 @@
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
 
+namespace AOC2015 {
+
 struct day_02 : public Advent_type {
-  static constexpr int year           = 2015;
-  static constexpr int date           = 2;
+  static constexpr int year                 = 2015;
+  static constexpr int date                 = 2;
   const std::vector<std::vector<int>> input = read_lines_vector_regex<int>(year, date, "\\d+");
 
   std::string part_1() override {
@@ -38,3 +40,5 @@ struct day_02 : public Advent_type {
         }));
   }
 };
+
+};  // namespace AOC2015

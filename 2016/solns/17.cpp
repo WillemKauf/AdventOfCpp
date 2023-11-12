@@ -34,8 +34,8 @@ struct day_17 : public Advent_type {
   std::string part_1() override {
     std::queue<State> queue;
     queue.emplace(0, 0, 0, input);
-    // static constexpr auto ddir = Grid::GetAllCardinalDirs(); // Cannot use, need to ensure that
-    // direction map is held constant.
+    // Cannot use, need to ensure that direction map is held constant.
+    // static constexpr auto ddir = Grid::GetAllCardinalDirs();
     std::array<std::array<Integer_type, 2>, 4> ddirs = {0, -1, 0, 1, -1, 0, 1, 0};
     const std::unordered_set<char> openDoorChars     = {'b', 'c', 'd', 'e', 'f'};
     const std::unordered_map<int, char> charMap      = {{0, 'U'}, {1, 'D'}, {2, 'L'}, {3, 'R'}};
@@ -74,8 +74,8 @@ struct day_17 : public Advent_type {
   std::string part_2() override {
     std::queue<State> queue;
     queue.emplace(0, 0, 0, input);
-    // static constexpr auto ddir = Grid::GetAllCardinalDirs(); // Cannot use, need to ensure that
-    // direction map is held constant.
+    // Cannot use, need to ensure that direction map is held constant.
+    // static constexpr auto ddir = Grid::GetAllCardinalDirs();
     std::array<std::array<Integer_type, 2>, 4> ddirs = {0, -1, 0, 1, -1, 0, 1, 0};
     const std::unordered_set<char> openDoorChars     = {'b', 'c', 'd', 'e', 'f'};
     const std::unordered_map<int, char> charMap      = {{0, 'U'}, {1, 'D'}, {2, 'L'}, {3, 'R'}};

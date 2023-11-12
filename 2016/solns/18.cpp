@@ -20,17 +20,11 @@ struct day_18 : public Advent_type {
     auto currRow                = input;
     static const auto inputSize = input.size();
     const auto getTile          = [](const auto& window) {
-      if (window[0] == '^' && window[1] == '^' && window[2] == '.') {
-        return '^';
-      } else if (window[0] == '.' && window[1] == '^' && window[2] == '^') {
-        return '^';
-      } else if (window[0] == '^' && window[1] == '.' && window[2] == '.') {
-        return '^';
-      } else if (window[0] == '.' && window[1] == '.' && window[2] == '^') {
-        return '^';
-      } else {
-        return '.';
-      }
+      const auto isTrap = (window[0] == '^' && window[1] == '^' && window[2] == '.') ||
+                          (window[0] == '.' && window[1] == '^' && window[2] == '^') ||
+                          (window[0] == '^' && window[1] == '.' && window[2] == '.') ||
+                          (window[0] == '.' && window[1] == '.' && window[2] == '^');
+      return isTrap ? '^' : '.';
     };
 
     int numSafeTiles = 0;

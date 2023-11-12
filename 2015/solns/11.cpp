@@ -21,7 +21,7 @@ struct day_11 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 11;
 
-  const std::string input     = read_lines_string(year, date)[0];
+  const std::string input     = read_lines<std::string>(year, date)[0];
   std::string initialPassword = {};
 
   void recursiveIncrement(std::string& password, std::size_t index) {

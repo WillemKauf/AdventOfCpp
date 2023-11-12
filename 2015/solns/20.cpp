@@ -21,7 +21,7 @@ namespace AOC2015 {
 struct day_20 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 20;
-  const int input           = std::stoi(read_lines_string(year, date)[0]);
+  const int input           = std::stoi(read_lines<std::string>(year, date)[0]);
 
   std::string part_1() override {
     const auto numPresents = [](int houseNumber) {

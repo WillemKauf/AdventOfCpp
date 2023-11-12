@@ -20,7 +20,7 @@ struct day_10 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 10;
 
-  const std::string input = read_lines_string(year, date)[0];
+  const std::string input = read_lines<std::string>(year, date)[0];
   std::string initialResult;
 
   std::string applyProcess(int n, std::string str) {

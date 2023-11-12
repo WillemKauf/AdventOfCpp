@@ -19,7 +19,7 @@ namespace AOC2016 {
 struct day_13 : public Advent_type {
   static constexpr int year = 2016;
   static constexpr int date = 13;
-  const int input    = std::stoi(read_lines_string(year, date)[0]);
+  const int input    = std::stoi(read_lines<std::string>(year, date)[0]);
 
   using Integer_type = uint16_t;
 

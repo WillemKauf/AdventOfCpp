@@ -203,10 +203,8 @@ struct day_11 : public Advent_type {
     std::priority_queue<State, std::vector<State>, std::greater<State>> stateQueue;
     stateQueue.push(originalState);
     std::unordered_map<uint64_t, int> seenHashMap;
-    long long seenStates = 0;
     while (!stateQueue.empty()) {
       auto currState = std::move(stateQueue.top());
-      ++seenStates;
       stateQueue.pop();
       if (currState.numSteps >= minSteps) {
         continue;

@@ -17,7 +17,7 @@ namespace AOC2016 {
 struct day_17 : public Advent_type {
   static constexpr int year = 2016;
   static constexpr int date = 17;
-  const std::string input   = read_lines_string(year, date)[0];
+  const std::string input   = read_lines<std::string>(year, date)[0];
 
   using Integer_type                     = int8_t;
   static constexpr Integer_type gridSize = 4;

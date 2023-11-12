@@ -16,7 +16,7 @@ struct day_08 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 8;
 
-  const std::vector<std::string> input = read_lines_string(year, date);
+  const std::vector<std::string> input = read_lines<std::string>(year, date);
 
   int getNumberChars(std::string_view stringView) {
     int numChars = 0;

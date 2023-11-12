@@ -9,6 +9,7 @@
 /////////////////
 //// std
 /////////////////
+#include <deque>
 #include <iomanip>
 #include <sstream>
 
@@ -59,7 +60,7 @@ constexpr auto GetAllCardinalDirs() {
 namespace Hash {
 
 template <typename T>
-std::string GetMD5Hash(const T& toHash) {
+inline std::string GetMD5Hash(const T& toHash) {
   unsigned char hashBuf[MD5_DIGEST_LENGTH];
   IGNORE_DEPRECATED_START
   MD5(reinterpret_cast<const unsigned char*>(toHash.c_str()), toHash.size(), hashBuf);
@@ -73,5 +74,37 @@ std::string GetMD5Hash(const T& toHash) {
 }
 
 }  // namespace Hash
+
+namespace Algorithm {
+
+template <typename T>
+inline void PrintDeque(const std::deque<T>& dq) {
+  auto dqCopy = dq;
+  while(!dqCopy.empty()){
+    std::cout << dqCopy.front() << " ";
+    dqCopy.pop_front();
+  }
+  std::cout << '\n';
+}
+
+//std::rotate is obnoxiously slow [O(n)] and not specialized for std::deque, quite silly.
+template <typename T, typename Int_T>
+inline void RotateDeque(std::deque<T>& dq, Int_T numRots) {
+  const auto rotLeft = (numRots < 0);
+  numRots = std::abs(numRots);
+  if (rotLeft) {
+    for (Int_T i = 0; i < numRots; ++i) {
+      dq.push_back(std::move(dq.front()));
+      dq.pop_front();
+    }
+  } else {
+    for (Int_T i = 0; i < numRots; ++i) {
+      dq.push_front(std::move(dq.back()));
+      dq.pop_back();
+    }
+  }
+};
+
+}  // namespace Algorithm
 
 #endif  // #ifndef COMMON_H

@@ -14,7 +14,7 @@ namespace AOC2016 {
 struct day_16 : public Advent_type {
   static constexpr int year = 2016;
   static constexpr int date = 16;
-  const std::string input   = read_lines_string(year, date)[0];
+  const std::string input   = read_lines<std::string>(year, date)[0];
 
   std::string getChecksum(std::string_view data) {
     std::string checkSum;

@@ -16,7 +16,7 @@ namespace AOC2015 {
 struct day_04 : public Advent_type {
   static constexpr int year = 2015;
   static constexpr int date = 4;
-  const std::string input   = read_lines_string(year, date)[0];
+  const std::string input   = read_lines<std::string>(year, date)[0];
   int startingIndex         = {};
 
   auto getIndex(int numZeros, int startIndex = 0) {

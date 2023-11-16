@@ -36,7 +36,7 @@ struct day_21 : public Advent_type {
     const auto rotateFunc = [&charMap, &posMap, startingStrSize](const auto rotAmount) {
       for (auto& [c, p] : charMap) {
         const int newP = p + rotAmount;
-        p              = (startingStrSize + (newP % startingStrSize)) % startingStrSize;
+        p = Algorithm::Modulo(newP, startingStrSize);
         posMap.at(p)   = c;
       }
     };

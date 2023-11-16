@@ -106,8 +106,9 @@ inline void RotateDeque(std::deque<T>& dq, Int_T numRots) {
   }
 };
 
+// Generate all permutation of a container.
 template <typename T>
-std::vector<T> GetPermutations(const T& inputContainer) {
+inline std::vector<T> GetPermutations(const T& inputContainer) {
   auto inputContainerCopy = inputContainer;
   std::sort(inputContainerCopy.begin(), inputContainerCopy.end());
   std::vector<T> perms = {inputContainerCopy};
@@ -115,6 +116,12 @@ std::vector<T> GetPermutations(const T& inputContainer) {
     perms.push_back(inputContainerCopy);
   }
   return perms;
+}
+
+// Handles negative mod.
+template <typename T>
+inline T Modulo(T a, T b) {
+  return (b + (a % b)) % b;
 }
 
 }  // namespace Algorithm

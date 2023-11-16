@@ -24,5 +24,5 @@ target_link_libraries(${PROJECT_NAME}
 #set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=-*,modernize-*,-std=c++23")
 #set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 
-#target_compile_options(${PROJECT_NAME} PRIVATE -O2 -g)
+#target_compile_options(${PROJECT_NAME} PRIVATE -g)
 target_compile_options(${PROJECT_NAME} PRIVATE -O3)

@@ -33,6 +33,14 @@ struct day_21 : public Advent_type {
       posMap[index] = c;
     }
 
+    const auto rotateFunc = [&charMap, &posMap, startingStrSize](const auto rotAmount) {
+      for (auto& [c, p] : charMap) {
+        const int newP = p + rotAmount;
+        p              = (startingStrSize + (newP % startingStrSize)) % startingStrSize;
+        posMap.at(p)   = c;
+      }
+    };
+
     for (const auto& v : input) {
       if (v[0] == "swap") {
         if (v[1] == "position") {
@@ -53,13 +61,6 @@ struct day_21 : public Advent_type {
           throw std::runtime_error("Invalid swap v[1]");
         }
       } else if (v[0] == "rotate") {
-        const auto rotateFunc = [&charMap, &posMap, startingStrSize](const auto rotAmount) {
-          for (auto& [c, p] : charMap) {
-            const int newP = p + rotAmount;
-            p              = (startingStrSize + (newP % startingStrSize)) % startingStrSize;
-            posMap.at(p)   = c;
-          }
-        };
         if (v[1] == "based") {
           const auto& basedC   = v[2][0];
           const auto& basedP   = charMap.at(basedC);

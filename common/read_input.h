@@ -41,7 +41,7 @@ inline auto read_lines(int year, int date) {
       if constexpr (std::is_same_v<T, int>) {
         input.push_back(std::stoi(line));
       } else if constexpr (std::is_same_v<T, char>) {
-        for(const auto& c : line){
+        for (const auto& c : line) {
           input.push_back(c);
         }
       } else {
@@ -96,47 +96,6 @@ inline auto read_lines_vector(int year, int date) {
   return input;
 }
 
-//template <typename T>
-//inline auto read_lines_vector_regex(const std::string& input_file, const std::string& regex_str) {
-//  boost::regex regex(regex_str);
-//  std::vector<std::vector<T>> input;
-//  {
-//    std::ifstream in_file(input_file);
-//    if (!in_file.is_open()) {
-//      throw std::runtime_error("Couldn't open file" + input_file);
-//    }
-//    for (std::string line; std::getline(in_file, line);) {
-//      std::istringstream iss(line);
-//      std::vector<T> line_vec;
-//      std::string string = iss.str();
-//      boost::sregex_iterator iterator(string.begin(), string.end(), regex);
-//      while (iterator != boost::sregex_iterator()) {
-//        boost::smatch match = *iterator;
-//        if (match.size() == 1) {
-//          if constexpr (std::is_same_v<T, int>) {
-//            line_vec.push_back(std::stoi(match.str()));
-//          } else {
-//            line_vec.push_back(match.str());
-//          }
-//        } else {
-//          for (int i = 1; i < match.size(); ++i) {
-//            const auto& group = match[i];
-//            if (group.length() == 0) continue;
-//            if constexpr (std::is_same_v<T, int>) {
-//              line_vec.push_back(std::stoi(group.str()));
-//            } else {
-//              line_vec.push_back(group.str());
-//            }
-//          }
-//        }
-//        ++iterator;
-//      }
-//      input.push_back(line_vec);
-//    }
-//  }
-//  return input;
-//}
-
 template <typename T, typename... Ts>
 inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex_strs) {
   std::vector<std::vector<T>> input;
@@ -178,11 +137,15 @@ inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex
           }
           ++iterator;
         }
+
         if (shouldBreak) {
           break;
         }
       }
-      input.push_back(line_vec);
+
+      if (!line_vec.empty()) {
+        input.push_back(line_vec);
+      }
     }
   }
   return input;

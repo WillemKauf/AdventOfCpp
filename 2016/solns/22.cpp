@@ -1,6 +1,7 @@
 /////////////////
 //// std
 /////////////////
+#include <limits>
 #include <vector>
 
 /////////////////
@@ -18,12 +19,120 @@ struct day_22 : public Advent_type {
   const std::vector<std::vector<int>> input = read_lines_vector_regex<int>(
       year, date, "/dev/grid/node-x(\\d+)-y(\\d+)\\s+(\\d+)T\\s+(\\d+)T\\s+(\\d+)T");
 
-  struct State {
+  struct Data {
+    Data() = default;
+    Data(int size, int used, int index, bool isGoal)
+        : size(size), used(used), index(index), isGoal(isGoal), isEmpty(used == 0) {}
     int size;
     int used;
+    int index;
+    bool isGoal;
+    bool isEmpty;
   };
 
-  using Map_type = std::unordered_map<int, State>;
+  using Grid_type = std::vector<std::vector<Data>>;
+
+  struct State {
+    State(const Grid_type& grid, int numSteps, int goalDataX, int goalDataY, int emptyDataX,
+          int emptyDataY, int n, int m)
+        : grid(grid),
+          numSteps(numSteps),
+          goalDataX(goalDataX),
+          goalDataY(goalDataY),
+          emptyDataX(emptyDataX),
+          emptyDataY(emptyDataY),
+          n(n),
+          m(m) {}
+    Grid_type grid;
+    int numSteps;
+
+    int goalDataX;
+    int goalDataY;
+
+    int emptyDataX;
+    int emptyDataY;
+
+    int n;
+    int m;
+
+    static constexpr auto ddir = Grid::GetAllCardinalDirs();
+
+    enum class DataMovement {
+      GOAL,
+      EMPTY
+    };
+
+    template <DataMovement dataMovement>
+    std::vector<State> TestAllDirs(int i, int j) const {
+      std::vector<State> newStates;
+      for (const auto& dd : ddir) {
+        const auto ii = i + dd[0];
+        const auto jj = j + dd[1];
+        if (0 <= ii && ii < n && 0 <= jj && jj < m) {
+          auto newState = *this;
+          auto& dataA   = newState.grid[j][i];
+          auto& dataB   = newState.grid[jj][ii];
+          if ((dataA.isEmpty && dataB.used <= dataA.size) ||
+              (dataB.isEmpty && dataA.used <= dataB.size)) {
+            std::swap(dataA, dataB);
+
+            if constexpr (dataMovement == DataMovement::GOAL) {
+              // Must have moved goal and empty data.
+              newState.goalDataX  = ii;
+              newState.goalDataY  = jj;
+              newState.emptyDataX = i;
+              newState.emptyDataY = j;
+            }
+
+            if constexpr (dataMovement == DataMovement::EMPTY) {
+              // Must have moved empty data, ~could~ have moved goal.
+              newState.emptyDataX = ii;
+              newState.emptyDataY = jj;
+              if (dataA.isGoal) {
+                newState.goalDataX = i;
+                newState.goalDataY = j;
+              }
+            }
+
+            ++newState.numSteps;
+            newStates.push_back(newState);
+          }
+        }
+      }
+      return newStates;
+    }
+
+    std::vector<State> GetNewStates() const {
+      std::vector<State> newStates;
+      // Get the new states from moving goal data first.
+      for (const auto& newState : TestAllDirs<DataMovement::GOAL>(goalDataX, goalDataY)) {
+        newStates.push_back(newState);
+      }
+
+      for (const auto& newState : TestAllDirs<DataMovement::EMPTY>(emptyDataX, emptyDataY)) {
+        newStates.push_back(newState);
+      }
+
+      return newStates;
+    }
+
+    std::string Hash() const {
+      std::string hash;
+      for (const auto& v : {goalDataX, goalDataY, emptyDataX, emptyDataY}) {
+        hash += std::to_string(v) + "-";
+      }
+      hash.pop_back();
+      return hash;
+    }
+
+    bool IsDone() const { return goalDataX == 0 && goalDataY == 0; };
+
+    auto operator<=>(const State& other) const {
+      const auto dist      = goalDataX + goalDataY;
+      const auto otherDist = other.goalDataX + other.goalDataY;
+      return std::tie(dist, numSteps) <=> std::tie(otherDist, other.numSteps);
+    }
+  };
 
   std::string part_1() override {
     int ans = 0;
@@ -44,10 +153,56 @@ struct day_22 : public Advent_type {
   }
 
   std::string part_2() override {
-    const auto& n              = input.back()[0];
-    static const auto getIndex = [n](const auto& i, const auto& j) { return i + j * n; };
-    static constexpr auto ddir = Grid::GetAllCardinalDirs();
-    return "";
+    const auto& n          = (input.back()[0] + 1);
+    const auto& m          = (input.back()[1] + 1);
+    Grid_type startingGrid = Grid_type(m, std::vector<Data>(n));
+
+    const int goalDataX = n - 1;
+    const int goalDataY = 0;
+    int emptyDataX      = {};
+    int emptyDataY      = {};
+    int dataIndex       = 0;
+    for (const auto& v : input) {
+      const auto& x         = v[0];
+      const auto& y         = v[1];
+      const auto& size      = v[2];
+      const auto& used      = v[3];
+      const bool isGoalData = (x == goalDataX) && (y == goalDataY);
+      if (used == 0) {
+        emptyDataX = x;
+        emptyDataY = y;
+      }
+      startingGrid[y][x] = {size, used, dataIndex++, isGoalData};
+    }
+
+    std::priority_queue<State, std::vector<State>, std::greater<State>> pq;
+    std::unordered_set<std::string> seenHashes;
+    pq.emplace(startingGrid, 0, goalDataX, goalDataY, emptyDataX, emptyDataY, n, m);
+    int minSteps = std::numeric_limits<int>::max();
+    while (!pq.empty()) {
+      const auto currState = std::move(pq.top());
+      pq.pop();
+      const auto stateHash = currState.Hash();
+      if (seenHashes.contains(stateHash)) {
+        continue;
+      }
+
+      seenHashes.insert(stateHash);
+
+      if (currState.IsDone()) {
+        minSteps = std::min(minSteps, currState.numSteps);
+        break;
+      }
+
+      if (currState.numSteps + 1 >= minSteps) {
+        continue;
+      }
+
+      for (const auto& newState : currState.GetNewStates()) {
+        pq.push(std::move(newState));
+      }
+    }
+    return std::to_string(minSteps);
   }
 };
 

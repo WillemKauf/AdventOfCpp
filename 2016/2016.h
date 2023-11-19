@@ -32,9 +32,9 @@
 #include "solns/20.cpp"
 #include "solns/21.cpp"
 #include "solns/22.cpp"
-// #include "solns/23.cpp"
-// #include "solns/24.cpp"
-// #include "solns/25.cpp"
+#include "solns/23.cpp"
+#include "solns/24.cpp"
+#include "solns/25.cpp"
 
 namespace AOC2016 {
 
@@ -87,18 +87,16 @@ struct AOC2016 : AdventYear_type {
         return std::make_unique<day_21>();
       case 22:
         return std::make_unique<day_22>();
-        //    case 23:
-        //      return std::make_unique<day_23>();
-        //    case 24:
-        //      return std::make_unique<day_24>();
-        //    case 25:
-        //      return std::make_unique<day_25>();
+      case 23:
+        return std::make_unique<day_23>();
+      case 24:
+        return std::make_unique<day_24>();
+      case 25:
+        return std::make_unique<day_25>();
       default:
         return nullptr;
     }
   }
-
-  void Run() override { RunImpl({22}); }
 };
 
 inline AdventYearPtr_type MakeYear() { return std::make_unique<AOC2016>(); }

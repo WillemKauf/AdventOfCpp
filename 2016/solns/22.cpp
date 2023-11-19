@@ -57,12 +57,6 @@ struct day_22 : public Advent_type {
 
     static constexpr auto ddir = Grid::GetAllCardinalDirs();
 
-    enum class DataMovement {
-      GOAL,
-      EMPTY
-    };
-
-    template <DataMovement dataMovement>
     std::vector<State> TestAllDirs(int i, int j) const {
       std::vector<State> newStates;
       for (const auto& dd : ddir) {
@@ -76,22 +70,12 @@ struct day_22 : public Advent_type {
               (dataB.isEmpty && dataA.used <= dataB.size)) {
             std::swap(dataA, dataB);
 
-            if constexpr (dataMovement == DataMovement::GOAL) {
-              // Must have moved goal and empty data.
-              newState.goalDataX  = ii;
-              newState.goalDataY  = jj;
-              newState.emptyDataX = i;
-              newState.emptyDataY = j;
-            }
-
-            if constexpr (dataMovement == DataMovement::EMPTY) {
-              // Must have moved empty data, ~could~ have moved goal.
-              newState.emptyDataX = ii;
-              newState.emptyDataY = jj;
-              if (dataA.isGoal) {
-                newState.goalDataX = i;
-                newState.goalDataY = j;
-              }
+            // Must have moved empty data, ~could~ have moved goal.
+            newState.emptyDataX = ii;
+            newState.emptyDataY = jj;
+            if (dataA.isGoal) {
+              newState.goalDataX = i;
+              newState.goalDataY = j;
             }
 
             ++newState.numSteps;
@@ -104,12 +88,7 @@ struct day_22 : public Advent_type {
 
     std::vector<State> GetNewStates() const {
       std::vector<State> newStates;
-      // Get the new states from moving goal data first.
-      for (const auto& newState : TestAllDirs<DataMovement::GOAL>(goalDataX, goalDataY)) {
-        newStates.push_back(newState);
-      }
-
-      for (const auto& newState : TestAllDirs<DataMovement::EMPTY>(emptyDataX, emptyDataY)) {
+      for (const auto& newState : TestAllDirs(emptyDataX, emptyDataY)) {
         newStates.push_back(newState);
       }
 

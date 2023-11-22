@@ -124,6 +124,11 @@ inline T Modulo(T a, T b) {
   return (b + (a % b)) % b;
 }
 
+template <typename T>
+inline T Sign(T a) {
+  return (a < T{0}) ? T{-1} : T{1};
+}
+
 }  // namespace Algorithm
 
 #endif  // #ifndef COMMON_H

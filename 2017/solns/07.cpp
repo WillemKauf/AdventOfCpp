@@ -94,12 +94,9 @@ struct day_07 : public Advent_type {
       }
     }
 
-    if (uniqueSum == -1) {
-      return std::nullopt;
-    } else {
-      const auto dfsWeight = CheckNode(uniqueNode);
-      return (dfsWeight.has_value()) ? dfsWeight : valueMap.at(uniqueNode) + otherSum - uniqueSum;
-    }
+    return (uniqueSum != -1)
+               ? CheckNode(uniqueNode).value_or(valueMap.at(uniqueNode) + otherSum - uniqueSum)
+               : std::optional<int>{};
   }
 
   std::string part_2() override { return std::to_string(CheckNode(rootNode).value()); }

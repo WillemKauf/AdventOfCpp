@@ -182,7 +182,7 @@ inline void CyclicReverse(T& container, Int_T a, Int_T b) {
 
 }  // namespace Algorithm
 
-namespace DataStructures {
+namespace DataStructure {
 
 class DSU {
 public:
@@ -222,6 +222,6 @@ private:
   int numSets;
 };
 
-}  // namespace DataStructures
+}  // namespace DataStructure
 
 #endif  // #ifndef COMMON_H

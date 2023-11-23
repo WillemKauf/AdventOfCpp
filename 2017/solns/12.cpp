@@ -16,9 +16,9 @@ struct day_12 : public Advent_type {
   static constexpr int date                 = 12;
   const std::vector<std::vector<int>> input = read_lines_vector_regex<int>(year, date, "(\\d+)");
 
-  DataStructures::DSU ParseInput() const { return {static_cast<int>(input.size())}; }
+  DataStructure::DSU ParseInput() const { return {static_cast<int>(input.size())}; }
 
-  DataStructures::DSU dsu = ParseInput();
+  DataStructure::DSU dsu = ParseInput();
 
   std::string part_1() override {
     for (const auto& v : input) {

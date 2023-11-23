@@ -129,6 +129,14 @@ inline T Sign(T a) {
   return (a < T{0}) ? T{-1} : T{1};
 }
 
+template <typename T, typename Int_T>
+inline void CyclicReverse(T& container, Int_T a, Int_T b) {
+  const Int_T n = container.size();
+  for (; a < b; ++a, --b) {
+    std::swap(container[Algorithm::Modulo(a, n)], container[Algorithm::Modulo(b, n)]);
+  }
+}
+
 }  // namespace Algorithm
 
 #endif  // #ifndef COMMON_H

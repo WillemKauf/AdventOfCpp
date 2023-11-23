@@ -1,12 +1,11 @@
 /////////////////
 //// std
 /////////////////
+#include <limits>
 
 /////////////////
 //// local
 /////////////////
-#include <limits>
-
 #include "../common/advent_base.h"
 #include "../common/common.h"
 #include "../common/read_input.h"
@@ -28,7 +27,7 @@ struct day_13 : public Advent_type {
       const auto numPasses = (t + depth) / (range - 1);
       const auto currPass  = (t + depth) % (range - 1);
       // numPasses % 2 == 0 -> This is currently moving downwards, else upwards.
-      return (numPasses % 2 == 0) ? currPass : range - currPass;;
+      return (numPasses % 2 == 0) ? currPass : range - currPass;
     }
   };
 

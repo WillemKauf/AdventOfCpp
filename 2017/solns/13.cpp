@@ -28,8 +28,7 @@ struct day_13 : public Advent_type {
       const auto numPasses = (t + depth) / (range - 1);
       const auto currPass  = (t + depth) % (range - 1);
       // numPasses % 2 == 0 -> This is currently moving downwards, else upwards.
-      const auto position = (numPasses % 2 == 0) ? currPass : range - currPass;
-      return position;
+      return (numPasses % 2 == 0) ? currPass : range - currPass;;
     }
   };
 

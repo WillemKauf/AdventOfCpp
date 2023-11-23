@@ -1,3 +1,6 @@
+#ifndef DATA_STRUCTURE_H
+#define DATA_STRUCTURE_H
+
 namespace DataStructure {
 
 class DSU {
@@ -39,3 +42,5 @@ private:
 };
 
 }  // namespace DataStructure
+
+#endif  // #ifndef DATA_STRUCTURE_H

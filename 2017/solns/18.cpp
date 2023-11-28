@@ -166,7 +166,7 @@ struct day_18 : public Advent_type {
       if constexpr (partTwo) {
         std::unique_lock uniqueLock(mutex);
         using namespace std::chrono_literals;
-        if (cv.wait_for(uniqueLock, 100ms, [&] { return !q.empty(); })) {
+        if (cv.wait_for(uniqueLock, 1ms, [&] { return !q.empty(); })) {
           registers[std::get<char>(instruct.x)] = q.front();
           q.pop();
           ++p;

@@ -22,7 +22,7 @@ struct day_18 : public Advent_type {
   static constexpr int date            = 18;
   const std::vector<std::string> input = read_lines<std::string>(year, date);
 
-  using Int_type = uint64_t;
+  using Int_type = int64_t;
 
   enum class InstructType {
     SND,
@@ -83,103 +83,7 @@ struct day_18 : public Advent_type {
 
   const std::vector<Instruct> instructInput = parseInput();
 
-  std::string part_1() override {
-    std::unordered_map<char, Int_type> registers;
-    Int_type lastSound   = {};
-    const auto inputSize = instructInput.size();
-    for (int p = 0; p < inputSize;) {
-      const auto& instruct = instructInput[p];
-      switch (instruct.instructType) {
-        case InstructType::SND: {
-          lastSound = registers[std::get<char>(instruct.x)];
-          ++p;
-          break;
-        }
-        case InstructType::SET: {
-          const auto x  = std::get<char>(instruct.x);
-          const auto& y = instruct.y;
-          if (std::holds_alternative<char>(y)) {
-            registers[x] = registers[std::get<char>(y)];
-          } else {
-            registers[x] = std::get<Int_type>(y);
-          }
-          ++p;
-          break;
-        }
-        case InstructType::ADD: {
-          const auto x  = std::get<char>(instruct.x);
-          const auto& y = instruct.y;
-          if (std::holds_alternative<char>(y)) {
-            registers[x] += registers[std::get<char>(y)];
-          } else {
-            registers[x] += std::get<Int_type>(y);
-          }
-          ++p;
-          break;
-        }
-        case InstructType::MUL: {
-          const auto x  = std::get<char>(instruct.x);
-          const auto& y = instruct.y;
-          if (std::holds_alternative<char>(y)) {
-            registers[x] *= registers[std::get<char>(y)];
-          } else {
-            registers[x] *= std::get<Int_type>(y);
-          }
-          ++p;
-          break;
-        }
-        case InstructType::MOD: {
-          const auto x  = std::get<char>(instruct.x);
-          const auto& y = instruct.y;
-          if (std::holds_alternative<char>(y)) {
-            registers[x] %= registers[std::get<char>(y)];
-          } else {
-            registers[x] %= std::get<Int_type>(y);
-          }
-          ++p;
-          break;
-        }
-        case InstructType::RCV: {
-          const auto x = std::get<char>(instruct.x);
-          if (registers[x] != 0) {
-            return std::to_string(lastSound);
-          }
-          ++p;
-          break;
-        }
-        case InstructType::JGZ: {
-          const auto& x = instruct.x;
-          const auto& y = instruct.y;
-          int offset    = 1;
-          if (std::holds_alternative<char>(y)) {
-            if (std::holds_alternative<char>(x)) {
-              if (registers[std::get<char>(x)] > 0) {
-                offset = registers[std::get<char>(y)];
-              }
-            } else {
-              if (std::get<Int_type>(x) > 0) {
-                offset = registers[std::get<char>(y)];
-              }
-            }
-          } else {
-            if (std::holds_alternative<char>(x)) {
-              if (registers[std::get<char>(x)] > 0) {
-                offset = std::get<Int_type>(y);
-              }
-            } else {
-              if (std::get<Int_type>(x) > 0) {
-                offset = std::get<Int_type>(y);
-              }
-            }
-          }
-          p += offset;
-          break;
-        }
-      }
-    }
-    std::unreachable();
-  }
-
+  template <bool partTwo = false>
   class Program {
   public:
     Program(Int_type PID, const std::vector<Instruct>& instructInput)
@@ -199,7 +103,112 @@ struct day_18 : public Advent_type {
 
     void SendValue(Int_type value) { otherProgram->RecvValue(value); }
 
+    int GetLastSound() const { return lastSound; }
+
     int GetSendCount() const { return sendCount; }
+
+    void ParseSND(const Instruct& instruct) {
+      if constexpr (partTwo) {
+        SendValue(registers[std::get<char>(instruct.x)]);
+        ++p;
+        ++sendCount;
+      } else {
+        lastSound = registers[std::get<char>(instruct.x)];
+        ++p;
+      }
+    }
+
+    void ParseSET(const Instruct& instruct) {
+      const auto x  = std::get<char>(instruct.x);
+      const auto& y = instruct.y;
+      if (std::holds_alternative<char>(y)) {
+        registers[x] = registers[std::get<char>(y)];
+      } else {
+        registers[x] = std::get<Int_type>(y);
+      }
+      ++p;
+    }
+
+    void ParseADD(const Instruct& instruct) {
+      const auto x  = std::get<char>(instruct.x);
+      const auto& y = instruct.y;
+      if (std::holds_alternative<char>(y)) {
+        registers[x] += registers[std::get<char>(y)];
+      } else {
+        registers[x] += std::get<Int_type>(y);
+      }
+      ++p;
+    }
+
+    void ParseMUL(const Instruct& instruct) {
+      const auto x  = std::get<char>(instruct.x);
+      const auto& y = instruct.y;
+      if (std::holds_alternative<char>(y)) {
+        registers[x] *= registers[std::get<char>(y)];
+      } else {
+        registers[x] *= std::get<Int_type>(y);
+      }
+      ++p;
+    }
+
+    void ParseMOD(const Instruct& instruct) {
+      const auto x  = std::get<char>(instruct.x);
+      const auto& y = instruct.y;
+      if (std::holds_alternative<char>(y)) {
+        registers[x] %= registers[std::get<char>(y)];
+      } else {
+        registers[x] %= std::get<Int_type>(y);
+      }
+      ++p;
+    }
+
+    void ParseRCV(const Instruct& instruct) {
+      if constexpr (partTwo) {
+        std::unique_lock uniqueLock(mutex);
+        using namespace std::chrono_literals;
+        if (cv.wait_for(uniqueLock, 100ms, [&] { return !q.empty(); })) {
+          registers[std::get<char>(instruct.x)] = q.front();
+          q.pop();
+          ++p;
+        } else {
+          breakFlag = true;
+        }
+      } else {
+        const auto x = std::get<char>(instruct.x);
+        if (registers[x] != 0) {
+          breakFlag = true;
+        }
+        ++p;
+      }
+    }
+
+    void ParseJGZ(const Instruct& instruct) {
+      const auto& x = instruct.x;
+      const auto& y = instruct.y;
+      int offset    = 1;
+      if (std::holds_alternative<char>(y)) {
+        if (std::holds_alternative<char>(x)) {
+          if (registers[std::get<char>(x)] > 0) {
+            offset = registers[std::get<char>(y)];
+          }
+        } else {
+          if (std::get<Int_type>(x) > 0) {
+            offset = registers[std::get<char>(y)];
+          }
+        }
+      } else {
+        if (std::holds_alternative<char>(x)) {
+          if (registers[std::get<char>(x)] > 0) {
+            offset = std::get<Int_type>(y);
+          }
+        } else {
+          if (std::get<Int_type>(x) > 0) {
+            offset = std::get<Int_type>(y);
+          }
+        }
+      }
+      p += offset;
+    }
 
     void Run() {
       const auto inputSize = instructInput.size();
@@ -207,93 +216,31 @@ struct day_18 : public Advent_type {
         const auto& instruct = instructInput[p];
         switch (instruct.instructType) {
           case InstructType::SND: {
-            SendValue(registers[std::get<char>(instruct.x)]);
-            ++p;
-            ++sendCount;
+            ParseSND(instruct);
             break;
           }
           case InstructType::SET: {
-            const auto x  = std::get<char>(instruct.x);
-            const auto& y = instruct.y;
-            if (std::holds_alternative<char>(y)) {
-              registers[x] = registers[std::get<char>(y)];
-            } else {
-              registers[x] = std::get<Int_type>(y);
-            }
-            ++p;
+            ParseSET(instruct);
             break;
           }
           case InstructType::ADD: {
-            const auto x  = std::get<char>(instruct.x);
-            const auto& y = instruct.y;
-            if (std::holds_alternative<char>(y)) {
-              registers[x] += registers[std::get<char>(y)];
-            } else {
-              registers[x] += std::get<Int_type>(y);
-            }
-            ++p;
+            ParseADD(instruct);
             break;
           }
           case InstructType::MUL: {
-            const auto x  = std::get<char>(instruct.x);
-            const auto& y = instruct.y;
-            if (std::holds_alternative<char>(y)) {
-              registers[x] *= registers[std::get<char>(y)];
-            } else {
-              registers[x] *= std::get<Int_type>(y);
-            }
-            ++p;
+            ParseMUL(instruct);
             break;
           }
           case InstructType::MOD: {
-            const auto x  = std::get<char>(instruct.x);
-            const auto& y = instruct.y;
-            if (std::holds_alternative<char>(y)) {
-              registers[x] %= registers[std::get<char>(y)];
-            } else {
-              registers[x] %= std::get<Int_type>(y);
-            }
-            ++p;
+            ParseMOD(instruct);
             break;
           }
           case InstructType::RCV: {
-            std::unique_lock uniqueLock(mutex);
-            using namespace std::chrono_literals;
-            if (cv.wait_for(uniqueLock, 100ms, [&] { return !q.empty(); })) {
-              registers[std::get<char>(instruct.x)] = q.front();
-              q.pop();
-              ++p;
-            } else {
-              breakFlag = true;
-            }
+            ParseRCV(instruct);
             break;
           }
           case InstructType::JGZ: {
-            const auto& x   = instruct.x;
-            const auto& y   = instruct.y;
-            Int_type offset = 1;
-            if (std::holds_alternative<char>(y)) {
-              if (std::holds_alternative<char>(x)) {
-                if (registers[std::get<char>(x)] > 0) {
-                  offset = registers[std::get<char>(y)];
-                }
-              } else {
-                if (std::get<Int_type>(x) > 0) {
-                  offset = registers[std::get<char>(y)];
-                }
-              }
-            } else {
-              if (std::holds_alternative<char>(x)) {
-                if (registers[std::get<char>(x)] > 0) {
-                  offset = std::get<Int_type>(y);
-                }
-              } else {
-                if (std::get<Int_type>(x) > 0) {
-                  offset = std::get<Int_type>(y);
-                }
-              }
-            }
-            p += offset;
+            ParseJGZ(instruct);
             break;
           }
         }
@@ -302,6 +249,7 @@ struct day_18 : public Advent_type {
 
   private:
     int PID               = {};
+    Int_type lastSound    = {};
     int sendCount         = 0;
     int p                 = 0;
     Program* otherProgram = nullptr;
@@ -313,16 +261,22 @@ struct day_18 : public Advent_type {
     bool breakFlag = false;
   };
 
+  std::string part_1() override {
+    auto p = Program(0, instructInput);
+    p.Run();
+    return std::to_string(p.GetLastSound());
+  }
+
   std::string part_2() override {
-    auto p0 = Program(0, instructInput);
-    auto p1 = Program(1, instructInput);
+    auto p0 = Program<true>(0, instructInput);
+    auto p1 = Program<true>(1, instructInput);
 
     p0.SetOtherProgram(&p1);
     p1.SetOtherProgram(&p0);
 
     {
-      auto t0 = std::jthread(&Program::Run, &p0);
-      auto t1 = std::jthread(&Program::Run, &p1);
+      auto t0 = std::jthread(&Program<true>::Run, &p0);
+      auto t1 = std::jthread(&Program<true>::Run, &p1);
     }  //.join()
 
     return std::to_string(p1.GetSendCount());

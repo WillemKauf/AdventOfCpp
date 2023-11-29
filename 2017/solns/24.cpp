@@ -19,7 +19,12 @@ struct day_24 : public Advent_type {
   using Int_type = uint64_t;
 
   int dfs(int prev, Int_type used) {
-    auto max = 0;
+    static std::unordered_map<std::string, int> dp;
+    const auto hash = std::to_string(prev) + "|" + std::to_string(used);
+    if (auto dpIt = dp.find(hash); dpIt != dp.end()) {
+      return dpIt->second;
+    }
+    int max = 0;
     for (auto [i, v] : std::views::enumerate(input)) {
       const auto shift = (Int_type{1} << i);
       if (used & shift) {
@@ -32,6 +37,7 @@ struct day_24 : public Advent_type {
         max                = std::max(max, sm + dfs(newPrev, newUsed));
       }
     }
+    dp[hash] = max;
     return max;
   }
 
@@ -40,15 +46,13 @@ struct day_24 : public Advent_type {
     for (auto [i, v] : std::views::enumerate(input)) {
       if (v[0] == 0 || v[1] == 0) {
         const auto used = (v[0] == 0) ? v[1] : v[0];
-        maxStrength = std::max(maxStrength, used + dfs(used, (Int_type{1} << i)));
+        maxStrength     = std::max(maxStrength, used + dfs(used, (Int_type{1} << i)));
       }
     }
     return std::to_string(maxStrength);
   }
 
-  std::string part_2() override {
-    return "";
-  }
+  std::string part_2() override { return ""; }
 };
 
 };  // namespace AOC2017

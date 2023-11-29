@@ -11,6 +11,11 @@
 
 namespace Algorithm {
 
+template <typename Container_T, typename Int_T = int>
+inline Int_T Sum(const Container_T& container) {
+  return std::accumulate(container.begin(), container.end(), Int_T(0));
+}
+
 template <typename T>
 inline void PrintDeque(const std::deque<T>& dq) {
   auto dqCopy = dq;

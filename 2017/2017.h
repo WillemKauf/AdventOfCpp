@@ -97,8 +97,6 @@ struct AOC2017 : AdventYear_type {
         return nullptr;
     }
   }
-
-  void Run() override { RunImpl({25}); }
 };
 
 inline AdventYearPtr_type MakeYear() { return std::make_unique<AOC2017>(); }

@@ -12,6 +12,8 @@
 #include <numeric>
 #include <string>
 
+static constexpr std::string DayTwentyFiveString = "Day 25!";
+
 using Return_type = std::pair<std::string, std::string>;
 
 struct Advent_type {

@@ -195,7 +195,7 @@ struct day_25 : public Advent_type {
     return std::to_string(i);
   }
 
-  std::string part_2() override { return "Day 25!"; }
+  std::string part_2() override { return DayTwentyFiveString; }
 };
 
 };  // namespace AOC2016

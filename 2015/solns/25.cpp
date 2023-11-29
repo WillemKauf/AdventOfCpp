@@ -28,7 +28,7 @@ struct day_25 : public Advent_type {
 
   std::string part_1() override { return "Unimplemented"; }
 
-  std::string part_2() override { return "Day 25!"; }
+  std::string part_2() override { return DayTwentyFiveString; }
 };
 
 /*

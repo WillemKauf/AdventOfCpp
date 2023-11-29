@@ -27,4 +27,5 @@ target_link_libraries(${PROJECT_NAME}
 #set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 
 #target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address -g)
+#target_compile_options(${PROJECT_NAME} PRIVATE -g)
 target_compile_options(${PROJECT_NAME} PRIVATE -O3)

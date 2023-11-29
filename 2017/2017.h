@@ -28,9 +28,9 @@
 #include "solns/16.cpp"
 #include "solns/17.cpp"
 #include "solns/18.cpp"
-// #include "solns/19.cpp"
-// #include "solns/20.cpp"
-// #include "solns/21.cpp"
+#include "solns/19.cpp"
+#include "solns/20.cpp"
+#include "solns/21.cpp"
 // #include "solns/22.cpp"
 // #include "solns/23.cpp"
 // #include "solns/24.cpp"
@@ -79,12 +79,12 @@ struct AOC2017 : AdventYear_type {
         return std::make_unique<day_17>();
       case 18:
         return std::make_unique<day_18>();
-      // case 19:
-      //   return std::make_unique<day_19>();
-      // case 20:
-      //   return std::make_unique<day_20>();
-      // case 21:
-      //   return std::make_unique<day_21>();
+      case 19:
+        return std::make_unique<day_19>();
+      case 20:
+        return std::make_unique<day_20>();
+      case 21:
+        return std::make_unique<day_21>();
       // case 22:
       //   return std::make_unique<day_22>();
       // case 23:
@@ -98,7 +98,7 @@ struct AOC2017 : AdventYear_type {
     }
   }
 
-  void Run() override { RunImpl({18}); }
+  void Run() override { RunImpl({21}); }
 };
 
 inline AdventYearPtr_type MakeYear() { return std::make_unique<AOC2017>(); }

@@ -14,7 +14,7 @@ inline std::vector<std::string> Split(const std::string& toSplit, const std::str
   for (auto splitP = toSplit.find(delim, p); splitP != std::string::npos;
        splitP      = toSplit.find(delim, p)) {
     splitString.push_back(toSplit.substr(p, splitP - p));
-    p = splitP + 1;
+    p = splitP + delim.size();
   }
   splitString.push_back(toSplit.substr(p));
   return splitString;

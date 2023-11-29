@@ -1,6 +1,7 @@
 /////////////////
 //// std
 /////////////////
+#include <unordered_map>
 
 /////////////////
 //// local
@@ -18,13 +19,13 @@ struct day_24 : public Advent_type {
 
   using Int_type = uint64_t;
 
-  int dfs(int prev, Int_type used) {
+  int dfsPartOne(int prev, Int_type used, int sm) {
     static std::unordered_map<std::string, int> dp;
     const auto hash = std::to_string(prev) + "|" + std::to_string(used);
     if (auto dpIt = dp.find(hash); dpIt != dp.end()) {
       return dpIt->second;
     }
-    int max = 0;
+    int max = sm;
     for (auto [i, v] : std::views::enumerate(input)) {
       const auto shift = (Int_type{1} << i);
       if (used & shift) {
@@ -33,26 +34,49 @@ struct day_24 : public Advent_type {
       if (prev == v[0] || prev == v[1]) {
         const auto newPrev = (prev == v[0]) ? v[1] : v[0];
         const auto newUsed = used | shift;
-        const auto sm      = v[0] + v[1];
-        max                = std::max(max, sm + dfs(newPrev, newUsed));
+        const auto newSm   = sm + v[0] + v[1];
+        max                = std::max(max, dfsPartOne(newPrev, newUsed, newSm));
       }
     }
     dp[hash] = max;
     return max;
   }
 
-  std::string part_1() override {
-    auto maxStrength = std::numeric_limits<int>::min();
+  std::pair<int, int> dfsPartTwo(int prev, Int_type used, int sm) {
+    static std::unordered_map<std::string, std::pair<int, int>> dp;
+    const auto hash = std::to_string(prev) + "|" + std::to_string(used);
+
+    if (auto dpIt = dp.find(hash); dpIt != dp.end()) {
+      return dpIt->second;
+    }
+
+    int max     = sm;
+    int maxSize = std::popcount(used);
     for (auto [i, v] : std::views::enumerate(input)) {
-      if (v[0] == 0 || v[1] == 0) {
-        const auto used = (v[0] == 0) ? v[1] : v[0];
-        maxStrength     = std::max(maxStrength, used + dfs(used, (Int_type{1} << i)));
+      const auto shift = (Int_type{1} << i);
+      if (used & shift) {
+        continue;
+      }
+      if (prev == v[0] || prev == v[1]) {
+        const auto newPrev = (prev == v[0]) ? v[1] : v[0];
+        const auto newUsed = used | shift;
+        const auto newSm   = sm + v[0] + v[1];
+        const auto dfsPair = dfsPartTwo(newPrev, newUsed, newSm);
+        if (dfsPair.second > maxSize) {
+          max     = dfsPair.first;
+          maxSize = dfsPair.second;
+        } else if (dfsPair.second == maxSize) {
+          max = std::max(max, dfsPair.first);
+        }
       }
     }
-    return std::to_string(maxStrength);
+    dp[hash] = {max, maxSize};
+    return {max, maxSize};
   }
 
-  std::string part_2() override { return ""; }
+  std::string part_1() override { return std::to_string(dfsPartOne(0, 0, 0)); }
+
+  std::string part_2() override { return std::to_string(dfsPartTwo(0, 0, 0).first); }
 };
 
 };  // namespace AOC2017

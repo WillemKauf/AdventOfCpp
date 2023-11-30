@@ -100,6 +100,43 @@ inline std::bitset<n> HexToBin(const T& t) {
   return b;
 }
 
+template <typename Set_type>
+Set_type SetIntersection(const Set_type& sOne, const Set_type& sTwo) {
+  Set_type setIntersection;
+  const bool useSOne    = (sOne.size() < sTwo.size());
+  const auto& sIterate  = (useSOne) ? sOne : sTwo;
+  const auto& sContains = (useSOne) ? sTwo : sOne;
+  for (const auto& v : sIterate) {
+    if (sContains.contains(v)) {
+      setIntersection.insert(v);
+    }
+  }
+  return setIntersection;
+}
+
+template <typename Set_type>
+Set_type SetDifference(const Set_type& sOne, const Set_type& sTwo) {
+  Set_type setDifference;
+  for (const auto& v : sOne) {
+    if (!sTwo.contains(v)) {
+      setDifference.insert(v);
+    }
+  }
+  return setDifference;
+}
+
+template <typename Set_type>
+Set_type SetUnion(const Set_type& sOne, const Set_type& sTwo) {
+  Set_type setUnion;
+  for (const auto& v : sOne) {
+    setUnion.insert(v);
+  }
+  for (const auto& v : sTwo) {
+    setUnion.insert(v);
+  }
+  return setUnion;
+}
+
 }  // namespace Algorithm
 
 #endif  // #ifndef ALGORITHM_H

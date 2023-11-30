@@ -21,7 +21,7 @@ struct day_01 : public Advent_type {
   std::string part_2() override {
     std::unordered_set<int> seenFreqs;
     int freq = 0;
-    while(true){
+    while (true) {
       for (const auto& change : input) {
         if (seenFreqs.contains(freq)) {
           return std::to_string(freq);

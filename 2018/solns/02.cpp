@@ -36,19 +36,17 @@ struct day_02 : public Advent_type {
   std::string part_2() override {
     for (auto [i, wordOne] : std::views::enumerate(input)) {
       for (auto wordTwo : std::views::drop(input, i + 1)) {
-        std::unordered_set<int> diffChars;
+        std::unordered_set<int> diffCharIndices;
         for (auto [i, chars] : std::views::zip(wordOne, wordTwo) | std::views::enumerate) {
           const auto& charOne = std::get<0>(chars);
           const auto& charTwo = std::get<1>(chars);
           if (charOne != charTwo) {
-            diffChars.insert(i);
+            diffCharIndices.insert(i);
           }
         }
-        if (diffChars.size() == 1) {
+        if (diffCharIndices.size() == 1) {
           auto returnWord = wordOne;
-          for (const auto& diffChar : diffChars) {
-            returnWord.erase(diffChar, 1);
-          }
+          returnWord.erase(*diffCharIndices.begin(), 1);
           return returnWord;
         }
       }

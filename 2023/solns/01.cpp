@@ -36,14 +36,14 @@ struct day_01 : public Advent_type {
         {"six", '6'}, {"seven", '7'}, {"eight", '8'}, {"nine", '9'}};
 
     auto ReplaceLeft = [&](auto& s) {
-                         std::size_t minP = s.size();
-      char c   = {};
-      bool replace = false;
+      std::size_t minP = s.size();
+      char c           = {};
+      bool replace     = false;
       for (const auto& [k, v] : validDigitsMap) {
         const auto p = s.find(k);
         if (p < minP) {
-          c    = v;
-          minP = p;
+          c       = v;
+          minP    = p;
           replace = true;
         }
       }

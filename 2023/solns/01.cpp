@@ -51,7 +51,7 @@ struct day_01 : public Advent_type {
     };
 
     auto ReplaceRight = [&](auto& s) {
-      int maxP = 0;
+      int maxP = -1;
       char c   = {};
       for (const auto& [k, v] : validDigitsMap) {
         const auto p = s.rfind(k);
@@ -60,7 +60,7 @@ struct day_01 : public Advent_type {
           maxP = p;
         }
       }
-      if (maxP != 0) {
+      if (maxP != -1) {
         s[maxP + 1] = c;
       }
     };

@@ -36,31 +36,35 @@ struct day_01 : public Advent_type {
         {"six", '6'}, {"seven", '7'}, {"eight", '8'}, {"nine", '9'}};
 
     auto ReplaceLeft = [&](auto& s) {
-      int minP = s.size();
+                         std::size_t minP = s.size();
       char c   = {};
+      bool replace = false;
       for (const auto& [k, v] : validDigitsMap) {
         const auto p = s.find(k);
         if (p < minP) {
           c    = v;
           minP = p;
+          replace = true;
         }
       }
-      if (minP != s.size()) {
+      if (replace) {
         s[minP + 1] = c;
       }
     };
 
     auto ReplaceRight = [&](auto& s) {
-      int maxP = -1;
-      char c   = {};
+      std::size_t maxP = 0;
+      char c           = {};
+      bool replace     = false;
       for (const auto& [k, v] : validDigitsMap) {
         const auto p = s.rfind(k);
         if (p != std::string::npos && p > maxP) {
-          c    = v;
-          maxP = p;
+          c       = v;
+          maxP    = p;
+          replace = true;
         }
       }
-      if (maxP != -1) {
+      if (replace) {
         s[maxP + 1] = c;
       }
     };

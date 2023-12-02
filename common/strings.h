@@ -20,6 +20,10 @@ inline std::vector<std::string> Split(const std::string& toSplit, const std::str
   return splitString;
 }
 
+inline void EraseAll(std::string& str, char c){
+  str.erase(std::remove(str.begin(), str.end(), c), str.end());
+}
+
 };  // namespace Strings
 
 #endif  // #ifndef STRINGS_H

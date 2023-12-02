@@ -119,6 +119,8 @@ inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex
               line_vec.push_back(std::stoi(match.str()));
             } else if constexpr (std::is_same_v<T, long> || std::is_same_v<T, uint32_t>) {
               line_vec.push_back(std::stol(match.str()));
+            }else if constexpr (std::is_same_v<T, char>) {
+              line_vec.push_back(match.str()[0]);
             } else {
               line_vec.push_back(match.str());
             }
@@ -130,6 +132,8 @@ inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex
                 line_vec.push_back(std::stoi(group.str()));
               } else if constexpr (std::is_same_v<T, long> || std::is_same_v<T, uint32_t>) {
                 line_vec.push_back(std::stol(group.str()));
+              }else if constexpr (std::is_same_v<T, char>) {
+                line_vec.push_back(group.str()[0]);
               } else {
                 line_vec.push_back(group.str());
               }

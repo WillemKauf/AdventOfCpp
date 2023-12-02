@@ -1,6 +1,9 @@
 /////////////////
 //// std
 /////////////////
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 /////////////////
 //// local
@@ -57,11 +60,9 @@ struct day_02 : public Advent_type {
           bool isValid      = true;
           for (const auto& round : v) {
             for (const auto& [c, n] : round) {
-              if (auto maxIt = maxMap.find(c); maxIt != maxMap.end()) {
-                if (n > maxIt->second) {
-                  isValid = false;
-                  break;
-                }
+              if (n > maxMap.at(c)) {
+                isValid = false;
+                break;
               }
               if (!isValid) {
                 break;

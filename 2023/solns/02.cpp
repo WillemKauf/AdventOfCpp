@@ -1,6 +1,7 @@
 /////////////////
 //// std
 /////////////////
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -57,22 +58,16 @@ struct day_02 : public Advent_type {
         std::accumulate(gameVec.begin(), gameVec.end(), 0, [&](int sm, const auto& pair) {
           const auto& index = pair.first;
           const auto& v     = pair.second;
-          bool isValid      = true;
           for (const auto& round : v) {
-            for (const auto& [c, n] : round) {
-              if (n > maxMap.at(c)) {
-                isValid = false;
-                break;
-              }
-              if (!isValid) {
-                break;
-              }
-            }
-            if (!isValid) {
-              break;
+            if (!std::all_of(round.begin(), round.end(), [&](const auto& pair) {
+                  const auto& c = pair.first;
+                  const auto& n = pair.second;
+                  return n <= maxMap.at(c);
+                })) {
+              return sm;
             }
           }
-          return sm + ((isValid) ? index : 0);
+          return sm + index;
         }));
   }
 

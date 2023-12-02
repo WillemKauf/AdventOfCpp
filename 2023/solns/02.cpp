@@ -60,8 +60,15 @@ struct day_02 : public Advent_type {
               if (auto maxIt = maxMap.find(c); maxIt != maxMap.end()) {
                 if (n > maxIt->second) {
                   isValid = false;
+                  break;
                 }
               }
+              if (!isValid) {
+                break;
+              }
+            }
+            if (!isValid) {
+              break;
             }
           }
           return sm + ((isValid) ? index : 0);

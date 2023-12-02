@@ -97,8 +97,9 @@ struct day_07 : public Advent_type {
       }
 
       const auto nextStep = std::move(workQ.top());
-      t                   = nextStep.first;
       workQ.pop();
+      t = nextStep.first;
+
       for (const auto& n : graph.at(nextStep.second)) {
         if (--inDs.at(n) == 0) {
           Q.emplace(n);

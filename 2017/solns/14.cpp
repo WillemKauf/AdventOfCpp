@@ -69,7 +69,7 @@ struct day_14 : public Advent_type {
           for (const auto& dd : ddir) {
             const auto ii = currPos.first + dd[0];
             const auto jj = currPos.second + dd[1];
-            if (0 <= ii && ii < gridSize && 0 <= jj && jj < gridSize) {
+            if (Grid::InBounds(ii, jj, gridSize, gridSize)) {
               if (grid[jj][ii] == 0) {
                 continue;
               }

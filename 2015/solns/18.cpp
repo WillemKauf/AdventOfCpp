@@ -49,10 +49,10 @@ struct day_18 : public Advent_type {
         for (int i = 0; i < n; ++i) {
           std::vector<char> neighbors;
           for (const auto& dd : ddirs) {
-            const auto new_i = i + dd[0];
-            const auto new_j = j + dd[1];
-            if (0 <= new_i && new_i < n && 0 <= new_j && new_j < n) {
-              neighbors.push_back(grid[new_j][new_i]);
+            const auto ii = i + dd[0];
+            const auto jj = j + dd[1];
+            if (Grid::InBounds(ii, jj, n, n)) {
+              neighbors.push_back(grid[jj][ii]);
             }
           }
           newGrid[j][i] = lightFunction(grid[j][i], neighbors);

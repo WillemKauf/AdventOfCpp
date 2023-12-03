@@ -62,7 +62,7 @@ struct day_22 : public Advent_type {
       for (const auto& dd : ddir) {
         const auto ii = i + dd[0];
         const auto jj = j + dd[1];
-        if (0 <= ii && ii < n && 0 <= jj && jj < m) {
+        if (Grid::InBounds(ii, jj, n, m)) {
           auto newState = *this;
           auto& dataA   = newState.grid[j][i];
           auto& dataB   = newState.grid[jj][ii];

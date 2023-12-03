@@ -69,7 +69,7 @@ struct day_19 : public Advent_type {
           if ((dd[0] != 0 && dd[0] == -di) || (dd[1] != 0 && dd[1] == -dj)) {
             continue;
           }
-          if (0 <= ii && ii < n && 0 <= jj && jj < m) {
+          if (Grid::InBounds(ii, jj, n, m)) {
             if (input[jj][ii] != ' ') {
               di = dd[0];
               dj = dd[1];

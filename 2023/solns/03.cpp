@@ -52,7 +52,7 @@ struct day_03 : public Advent_type {
           for (const auto& dd : ddir) {
             const auto ii = i + dd[0];
             const auto jj = j + dd[1];
-            if (0 <= ii & ii < n && 0 <= jj & jj < m) {
+            if(Grid::InBounds(ii, jj, n, m)){
               if (!std::isdigit(input[jj][ii]) && input[jj][ii] != '.') {
                 isPartNumber = true;
               }
@@ -104,7 +104,7 @@ struct day_03 : public Advent_type {
             for (const auto& dd : ddir) {
               const auto ii = i + dd[0];
               const auto jj = j + dd[1];
-              if (0 <= ii & ii < n && 0 <= jj & jj < m) {
+              if(Grid::InBounds(ii, jj, n, m)){
                 const auto newPos = Pair_type{ii, jj};
                 if (auto numberMapIt = numberMap.find(newPos); numberMapIt != numberMap.end()) {
                   const auto& partNumber  = numberMapIt->second.value;

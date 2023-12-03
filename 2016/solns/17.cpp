@@ -63,7 +63,7 @@ struct day_17 : public Advent_type {
         }
         const auto newX = currState.x + dd[0];
         const auto newY = currState.y + dd[1];
-        if (0 <= newX && newX < gridSize && 0 <= newY && newY < gridSize) {
+        if (Grid::InBounds(newX, newY, gridSize, gridSize)) {
           queue.emplace(newX, newY, currState.numSteps + 1, currState.pathStr + charMap.at(index));
         }
       }
@@ -95,7 +95,7 @@ struct day_17 : public Advent_type {
         }
         const auto newX = currState.x + dd[0];
         const auto newY = currState.y + dd[1];
-        if (0 <= newX && newX < gridSize && 0 <= newY && newY < gridSize) {
+        if (Grid::InBounds(newX, newY, gridSize, gridSize)) {
           queue.emplace(newX, newY, currState.numSteps + 1, currState.pathStr + charMap.at(index));
         }
       }

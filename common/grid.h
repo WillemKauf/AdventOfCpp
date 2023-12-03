@@ -41,6 +41,10 @@ constexpr auto GetAllCardinalDirs() {
 static constexpr auto OrthogonalDirections = GetAllCardinalDirs();
 static constexpr auto DiagonalDirections = GetAllCardinalDirs<Grid::GridDirection::WithDiagonals>();
 
+inline bool InBounds(auto i, auto j, auto n, auto m){
+  return (0 <= i) && (i < n) && (0 <= j) && (j < m);
+}
+
 enum class HexGridDirections {
   N,
   S,

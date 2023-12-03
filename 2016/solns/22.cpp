@@ -55,7 +55,7 @@ struct day_22 : public Advent_type {
     int n;
     int m;
 
-    static constexpr auto ddir = Grid::GetAllCardinalDirs();
+    static constexpr auto ddir = Grid::OrthogonalDirections;
 
     std::vector<State> TestAllDirs(int i, int j) const {
       std::vector<State> newStates;

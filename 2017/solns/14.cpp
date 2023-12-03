@@ -8,6 +8,7 @@
 #include "../common/advent_base.h"
 #include "../common/common.h"
 #include "../common/read_input.h"
+#include "grid.h"
 
 namespace AOC2017 {
 
@@ -45,7 +46,7 @@ struct day_14 : public Advent_type {
   }
 
   std::string part_2() override {
-    static constexpr auto ddir = Grid::GetAllCardinalDirs();
+    static constexpr auto ddir = Grid::OrthogonalDirections;
     std::unordered_set<int> seen;
     int numRegions      = 0;
     const auto hashFunc = [&](const auto& i, const auto& j) { return i + j * gridSize; };

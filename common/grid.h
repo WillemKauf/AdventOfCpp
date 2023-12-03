@@ -38,6 +38,9 @@ constexpr auto GetAllCardinalDirs() {
   return ddirs;
 }
 
+static constexpr auto OrthogonalDirections = GetAllCardinalDirs();
+static constexpr auto DiagonalDirections = GetAllCardinalDirs<Grid::GridDirection::WithDiagonals>();
+
 enum class HexGridDirections {
   N,
   S,

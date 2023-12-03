@@ -13,13 +13,16 @@
 #include "../common/common.h"
 #include "../common/advent_base.h"
 #include "../common/read_input.h"
+#include "grid.h"
 
 namespace AOC2016 {
 
 struct day_13 : public Advent_type {
   static constexpr int year = 2016;
   static constexpr int date = 13;
-  const int input    = std::stoi(read_lines<std::string>(year, date)[0]);
+  const int input           = std::stoi(read_lines<std::string>(year, date)[0]);
+
+  static constexpr auto ddir = Grid::OrthogonalDirections;
 
   using Integer_type = uint16_t;
 
@@ -56,7 +59,6 @@ struct day_13 : public Advent_type {
     static constexpr auto finalX = 31;
     static constexpr auto finalY = 39;
     int minSteps                 = std::numeric_limits<int>::max();
-    static constexpr auto ddir   = Grid::GetAllCardinalDirs();
     std::unordered_set<uint32_t> seen;
     while (!queue.empty()) {
       const auto currState = std::move(queue.front());
@@ -96,7 +98,6 @@ struct day_13 : public Advent_type {
   std::string part_2() override {
     std::queue<State> queue;
     queue.emplace(1, 1);
-    static constexpr auto ddir = Grid::GetAllCardinalDirs();
     std::unordered_set<uint32_t> seen;
     while (!queue.empty()) {
       const auto currState = std::move(queue.front());

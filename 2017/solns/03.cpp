@@ -8,6 +8,7 @@
 #include "../common/advent_base.h"
 #include "../common/common.h"
 #include "../common/read_input.h"
+#include "grid.h"
 
 namespace AOC2017 {
 
@@ -94,7 +95,7 @@ struct day_03 : public Advent_type {
   }
 
   std::string part_2() override {
-    static constexpr auto ddir = Grid::GetAllCardinalDirs<Grid::GridDirection::WithDiagonals>();
+    static constexpr auto ddir = Grid::DiagonalDirections;
     std::unordered_map<int, int> grid;
     grid[0]       = 1;
     int i         = 1;

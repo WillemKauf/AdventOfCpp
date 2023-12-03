@@ -88,7 +88,7 @@ struct day_24 : public Advent_type {
     return distanceMap;
   }
 
-  static constexpr auto ddir = Grid::GetAllCardinalDirs();
+  static constexpr auto ddir = Grid::OrthogonalDirections;
 
   int minStepsPartTwo = std::numeric_limits<int>::max();
 

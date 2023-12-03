@@ -20,7 +20,7 @@ struct day_18 : public Advent_type {
 
   const std::vector<std::vector<char>> input = read_lines_vector(year, date);
   const int n                                = input.size();
-  static constexpr auto ddirs                = Grid::GetAllCardinalDirs<Grid::GridDirection::WithDiagonals>();
+  static constexpr auto ddirs                = Grid::DiagonalDirections;
 
   template <typename T>
   auto lightFunction(char value, const T& neighbors) const {

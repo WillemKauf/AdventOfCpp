@@ -20,9 +20,9 @@ inline Int_T Sum(const Container_T& container) {
 template <typename Container_T, typename Int_T = int>
 inline Int_T Product(const Container_T& container) {
   using value_type = Container_T::value_type;
-  return std::accumulate(container.begin(), container.end(), Int_T(1), std::multiplies<value_type>{});
+  return std::accumulate(container.begin(), container.end(), Int_T(1),
+                         std::multiplies<value_type>{});
 }
-
 
 template <typename T>
 inline void PrintDeque(const std::deque<T>& dq) {

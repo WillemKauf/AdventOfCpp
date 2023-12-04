@@ -91,7 +91,6 @@ struct day_03 : public Advent_type {
   std::string part_2() override {
     const auto m = input.size();
     const auto n = input[0].size();
-    int ans      = 0;
     return std::to_string(
         std::accumulate(symbolMap.begin(), symbolMap.end(), 0, [&](int sm, const auto& p) {
           const auto& k = p.first;

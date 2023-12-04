@@ -71,7 +71,7 @@ struct day_04 : public Advent_type {
       return numCardsIt->second;
     }
 
-    const auto card        = cards[p];
+    const auto& card       = cards[p];
     const auto& leftCard   = card.first;
     const auto& rightCard  = card.second;
     const auto numMatching = Algorithm::SetIntersection(leftCard, rightCard).size();

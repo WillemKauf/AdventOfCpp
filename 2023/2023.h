@@ -14,27 +14,27 @@
 #include "solns/02.cpp"
 #include "solns/03.cpp"
 #include "solns/04.cpp"
-//  #include "solns/05.cpp"
-//  #include "solns/06.cpp"
-//  #include "solns/07.cpp"
-//  #include "solns/08.cpp"
-//  #include "solns/09.cpp"
-//  #include "solns/10.cpp"
-//  #include "solns/11.cpp"
-//  #include "solns/12.cpp"
-//  #include "solns/13.cpp"
-//  #include "solns/14.cpp"
-//  #include "solns/15.cpp"
-//  #include "solns/16.cpp"
-//  #include "solns/17.cpp"
-//  #include "solns/18.cpp"
-//  #include "solns/19.cpp"
-//  #include "solns/20.cpp"
-//  #include "solns/21.cpp"
-//  #include "solns/22.cpp"
-//  #include "solns/23.cpp"
-//  #include "solns/24.cpp"
-//  #include "solns/25.cpp"
+#include "solns/05.cpp"
+// #include "solns/06.cpp"
+// #include "solns/07.cpp"
+// #include "solns/08.cpp"
+// #include "solns/09.cpp"
+// #include "solns/10.cpp"
+// #include "solns/11.cpp"
+// #include "solns/12.cpp"
+// #include "solns/13.cpp"
+// #include "solns/14.cpp"
+// #include "solns/15.cpp"
+// #include "solns/16.cpp"
+// #include "solns/17.cpp"
+// #include "solns/18.cpp"
+// #include "solns/19.cpp"
+// #include "solns/20.cpp"
+// #include "solns/21.cpp"
+// #include "solns/22.cpp"
+// #include "solns/23.cpp"
+// #include "solns/24.cpp"
+// #include "solns/25.cpp"
 
 namespace AOC2023 {
 
@@ -51,8 +51,8 @@ struct AOC2023 : AdventYear_type {
         return std::make_unique<day_03>();
       case 4:
         return std::make_unique<day_04>();
-      //  case 5:
-      //    return std::make_unique<day_05>();
+      case 5:
+        return std::make_unique<day_05>();
       //  case 6:
       //    return std::make_unique<day_06>();
       //  case 7:
@@ -98,7 +98,7 @@ struct AOC2023 : AdventYear_type {
     }
   }
 
-  void Run() override { RunImpl({4}); }
+  void Run() override { RunImpl({5}); }
 };
 
 inline AdventYearPtr_type MakeYear() { return std::make_unique<AOC2023>(); }

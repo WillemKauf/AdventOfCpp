@@ -41,7 +41,6 @@ struct day_08 : public Advent_type {
     int sm                  = 0;
     const int numChildNodes = input[p++];
     const int numMetaData   = input[p++];
-    std::vector<int> sums;
 
     if (numChildNodes == 0) {
       for (int i = 0; i < numMetaData; ++i) {
@@ -50,6 +49,8 @@ struct day_08 : public Advent_type {
       return sm;
     }
 
+    std::vector<int> sums;
+    sums.reserve(numChildNodes);
     for (int i = 0; i < numChildNodes; ++i) {
       sums.push_back(RecursePartTwo(p));
     }

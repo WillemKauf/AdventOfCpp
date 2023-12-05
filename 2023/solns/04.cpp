@@ -24,6 +24,8 @@ struct day_04 : public Advent_type {
 
   Cards_type ParseInput() const {
     Cards_type cards;
+    cards.reserve(input.size());
+
     for (const auto& v : input) {
       const auto twoSides = Strings::Split(v, " | ");
 
@@ -45,6 +47,7 @@ struct day_04 : public Advent_type {
       }
       cards.emplace_back(std::move(leftCard), std::move(rightCard));
     }
+
     return cards;
   }
 

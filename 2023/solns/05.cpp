@@ -7,6 +7,11 @@
 #include <unordered_map>
 
 /////////////////
+//// openMP
+/////////////////
+#include <omp.h>
+
+/////////////////
 //// local
 /////////////////
 #include "../common/advent_base.h"
@@ -21,7 +26,7 @@ struct day_05 : public Advent_type {
   const std::vector<std::vector<std::string>> input =
       read_lines_vector_regex<std::string>(year, date, "(\\d+)", "(\\w+)-to-(\\w+) (map):");
 
-  using Int_type         = int64_t;
+  using Int_type         = uint32_t;
   using IntervalMap_type = std::map<Int_type, Int_type>;
 
   struct Value {
@@ -39,10 +44,11 @@ struct day_05 : public Advent_type {
 
   Input ParseInput() const {
     std::vector<Int_type> seeds;
-    seeds.reserve(input[0].size());
+    const auto& seedStrs = input[0];
+    seeds.reserve(seedStrs.size());
 
-    for (const auto& seedStr : input[0]) {
-      seeds.push_back(std::stoll(seedStr));
+    for (const auto& seedStr : seedStrs) {
+      seeds.push_back(std::stol(seedStr));
     }
 
     std::string currKey;
@@ -56,9 +62,9 @@ struct day_05 : public Advent_type {
         currValue = Value{v[1]};
         currKey   = v[0];
       } else if (v.size() != 0) {
-        const Int_type destStart   = std::stoll(v[0]);
-        const Int_type sourceStart = std::stoll(v[1]);
-        const Int_type rangeLength = std::stoll(v[2]);
+        const Int_type destStart   = std::stol(v[0]);
+        const Int_type sourceStart = std::stol(v[1]);
+        const Int_type rangeLength = std::stol(v[2]);
         const Int_type sourceEnd   = sourceStart + rangeLength;
         auto& intervalMap          = currValue.intervalMap;
         intervalMap[sourceStart]   = destStart;
@@ -104,18 +110,16 @@ struct day_05 : public Advent_type {
   }
 
   std::string part_2() override {
-    Int_type ans               = std::numeric_limits<Int_type>::max();
-    const auto& seedsChunkView = std::views::chunk(seeds, 2);
-    return std::to_string(std::accumulate(seedsChunkView.begin(), seedsChunkView.end(),
-                                          std::numeric_limits<Int_type>::max(),
-                                          [&](Int_type ans, const auto& seedRange) {
-                                            const Int_type seedMin = seedRange[0];
-                                            const Int_type seedMax = seedMin + seedRange[1];
-                                            for (Int_type i = seedMin; i < seedMax; ++i) {
-                                              ans = std::min(ans, Recurse(i));
-                                            }
-                                            return ans;
-                                          }));
+    Int_type ans = std::numeric_limits<Int_type>::max();
+    for (const auto& seedRange : std::views::chunk(seeds, 2)) {
+      const Int_type seedMin = seedRange[0];
+      const Int_type seedMax = seedMin + seedRange[1];
+#pragma omp parallel for reduction(min : ans)
+      for (Int_type i = seedMin; i < seedMax; ++i) {
+        ans = std::min(ans, Recurse(i));
+      }
+    }
+    return std::to_string(ans);
   }
 };
 

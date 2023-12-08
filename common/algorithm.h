@@ -12,6 +12,12 @@
 
 namespace Algorithm {
 
+template <typename Container_T, typename Int_T = Container_T::value_type>
+inline Int_T LCM(const Container_T& container) {
+  return std::accumulate(container.begin(), container.end(), Int_T(1),
+                         [](const auto& a, const auto& b) { return std::lcm(a, b); });
+}
+
 template <typename Container_T, typename Int_T = int>
 inline Int_T Sum(const Container_T& container) {
   return std::accumulate(container.begin(), container.end(), Int_T(0));

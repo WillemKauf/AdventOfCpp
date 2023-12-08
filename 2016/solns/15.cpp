@@ -41,12 +41,6 @@ struct day_15 : public Advent_type {
     int dt             = 1;
     const int numDiscs = discs.size();
 
-    const auto lcmFunc = [](const auto& v) {
-      using T = typename std::decay_t<decltype(v)>::value_type;
-      return std::accumulate(v.begin(), v.end(), T(1),
-                             [](const auto& a, const auto& b) { return std::lcm(a, b); });
-    };
-
     while (true) {
       std::unordered_set<int> seenDiscs;
       for (auto [index, disc] : std::views::enumerate(discs)) {
@@ -63,7 +57,7 @@ struct day_15 : public Advent_type {
 
       if (seenDiscsSize > maxSeenDiscs) {
         maxSeenDiscs = seenDiscsSize;
-        dt           = lcmFunc(seenDiscs);
+        dt           = Algorithm::LCM(seenDiscs);
       }
 
       t += dt;

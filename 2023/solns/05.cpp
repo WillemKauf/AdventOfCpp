@@ -57,6 +57,10 @@ struct day_05 : public Advent_type {
     for (const auto& v : std::views::drop(input, 1)) {
       if (v.back() == "map") {
         if (!currKey.empty()) {
+          auto& intervalMap = currValue.intervalMap;
+          if (!intervalMap.contains(0)) {
+            intervalMap[0] = 0;
+          }
           valueMap.insert_or_assign(currKey, currValue);
         }
         currValue = Value{v[1]};
@@ -75,6 +79,10 @@ struct day_05 : public Advent_type {
     }
 
     if (!currKey.empty()) {
+      auto& intervalMap = currValue.intervalMap;
+      if (!intervalMap.contains(0)) {
+        intervalMap[0] = 0;
+      }
       valueMap.insert_or_assign(currKey, currValue);
     }
 
@@ -95,7 +103,7 @@ struct day_05 : public Advent_type {
     Int_type dest           = source;
     if (auto intervalMapIt = intervalMap.lower_bound(source); intervalMapIt != intervalMap.end()) {
       const auto minBoundIt =
-          (intervalMapIt->first != source) ? std::prev(intervalMapIt) : intervalMapIt;
+          (intervalMapIt->first > source) ? std::prev(intervalMapIt) : intervalMapIt;
       const Int_type dist = source - minBoundIt->first;
       dest                = minBoundIt->second + dist;
     }

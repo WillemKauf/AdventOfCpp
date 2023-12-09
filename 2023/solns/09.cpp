@@ -37,13 +37,16 @@ struct day_09 : public Advent_type {
       // newSequence.erase(newSequence.begin());
       // And this way we avoid two initializations of vector values anyways, along with the extra
       // allocation space and call to .erase(). This STL function really sucks.
-      Vector_type newSequence;
-      newSequence.reserve(sequence.size() - 1);
-      for (const auto& ab : std::views::slide(sequence, 2)) {
-        newSequence.push_back(ab[1] - ab[0]);
+      // Vector_type newSequence;
+      // newSequence.reserve(sequence.size() - 1);
+      // for (const auto& ab : std::views::slide(sequence, 2)) {
+      //  newSequence.push_back(ab[1] - ab[0]);
+      //}
+      // But actually, the most performant thing to do is this:
+      for (int i = 1; i < sequence.size(); ++i) {
+        sequence[i - 1] = sequence[i] - sequence[i - 1];
       }
-
-      sequence = std::move(newSequence);
+      sequence.pop_back();
       if constexpr (partTwo) {
         edgeValues.push_back(sequence.front());
       } else {

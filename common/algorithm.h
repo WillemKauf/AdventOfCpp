@@ -9,6 +9,7 @@
 #include <deque>
 #include <functional>
 #include <limits>
+#include <ranges>
 
 namespace Algorithm {
 
@@ -74,6 +75,50 @@ inline std::vector<T> GetPermutations(const T& inputContainer) {
     perms.push_back(inputContainerCopy);
   }
   return perms;
+}
+
+namespace {
+template <typename T, typename Int_T>
+inline std::vector<T> GetCombinationsImpl(const T& inputContainer, Int_T k, std::string& selected,
+                                          T& currComb, std::unordered_set<std::string>& seenCombs) {
+  if (k == 0) {
+    if (!seenCombs.contains(selected)) {
+      seenCombs.insert(selected);
+      return {currComb};
+    } else {
+      return {};
+    }
+  }
+  std::vector<T> combinations;
+  for (const auto& [index, v] : std::views::enumerate(inputContainer)) {
+    if (selected[index] == 'Y') {
+      continue;
+    }
+    selected[index] = 'Y';
+    currComb.push_back(v);
+    for (const auto& combination :
+         GetCombinationsImpl(inputContainer, k - 1, selected, currComb, seenCombs)) {
+      combinations.push_back(combination);
+    }
+    selected[index] = 'N';
+    currComb.pop_back();
+  }
+  return combinations;
+}
+}  // namespace
+
+template <typename T, typename Int_T>
+inline std::vector<T> GetCombinations(const T& inputContainer, Int_T k) {
+  std::unordered_set<std::string> seenCombs;
+  std::vector<T> combinations;
+  std::string selected(inputContainer.size(), 'N');
+  T currComb;
+  currComb.reserve(k);
+  for (const auto& combination :
+       GetCombinationsImpl(inputContainer, k, selected, currComb, seenCombs)) {
+    combinations.push_back(combination);
+  }
+  return combinations;
 }
 
 // Handles negative mod.

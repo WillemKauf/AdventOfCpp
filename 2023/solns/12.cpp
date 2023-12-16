@@ -82,7 +82,7 @@ struct day_12 : public Advent_type {
       currN = 0;
     }
 
-    // If we changed something previously that has now lead to too many consecutive #s.
+    // If we changed something previously that has now led to too many consecutive #s.
     if (currN > groupN) {
       return 0;
     }

@@ -69,6 +69,7 @@ struct day_15 : public Advent_type {
       std::string_view key;
       int value;
     };
+
     std::unordered_map<Hash_type, std::vector<KeyValue>> boxMap;
     std::unordered_map<Hash_type, std::unordered_set<std::string_view>> boxLabelMap;
     for (const auto& op : operations) {

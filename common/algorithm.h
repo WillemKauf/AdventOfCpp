@@ -160,7 +160,7 @@ inline std::bitset<n> HexToBin(const T& t) {
 }
 
 template <typename Set_type>
-Set_type SetIntersection(const Set_type& sOne, const Set_type& sTwo) {
+inline Set_type SetIntersection(const Set_type& sOne, const Set_type& sTwo) {
   Set_type setIntersection;
   const bool useSOne    = (sOne.size() < sTwo.size());
   const auto& sIterate  = (useSOne) ? sOne : sTwo;
@@ -174,7 +174,7 @@ Set_type SetIntersection(const Set_type& sOne, const Set_type& sTwo) {
 }
 
 template <typename Set_type>
-Set_type SetDifference(const Set_type& sOne, const Set_type& sTwo) {
+inline Set_type SetDifference(const Set_type& sOne, const Set_type& sTwo) {
   Set_type setDifference;
   for (const auto& v : sOne) {
     if (!sTwo.contains(v)) {
@@ -185,7 +185,7 @@ Set_type SetDifference(const Set_type& sOne, const Set_type& sTwo) {
 }
 
 template <typename Set_type>
-Set_type SetUnion(const Set_type& sOne, const Set_type& sTwo) {
+inline Set_type SetUnion(const Set_type& sOne, const Set_type& sTwo) {
   Set_type setUnion;
   for (const auto& v : sOne) {
     setUnion.insert(v);
@@ -194,6 +194,22 @@ Set_type SetUnion(const Set_type& sOne, const Set_type& sTwo) {
     setUnion.insert(v);
   }
   return setUnion;
+}
+
+template <typename Grid_type>
+inline Grid_type TransposeGrid(const Grid_type& grid){
+  const auto m = grid.size();
+  const auto n = grid[0].size();
+  Grid_type cols(n);
+  for (auto& col : cols) {
+    col.reserve(m);
+  }
+  for (const auto& row : grid) {
+    for (const auto& [i, c] : std::views::enumerate(row)) {
+      cols[i].push_back(c);
+    }
+  }
+  return cols;
 }
 
 }  // namespace Algorithm

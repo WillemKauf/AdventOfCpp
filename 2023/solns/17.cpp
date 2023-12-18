@@ -48,6 +48,10 @@ struct day_17 : public Advent_type {
       hash |= (static_cast<Hash_type>(numStepsDir) << (4 * posIntSize));
       return hash;
     }
+
+    auto operator<=>(const State& other) const {
+      return std::tie(heatLoss, other.pos) <=> std::tie(other.heatLoss, pos);
+    }
   };
 
   std::string part_1() override {
@@ -57,26 +61,23 @@ struct day_17 : public Advent_type {
 
     HeatInt_type minLoss = std::numeric_limits<HeatInt_type>::max();
 
-    std::queue<State> q;
+    std::priority_queue<State, std::vector<State>, std::greater<State>> q;
     q.emplace(Pos_type{0, 0}, Dir_type{1, 0});  // Right
     q.emplace(Pos_type{0, 0}, Dir_type{0, 1});  // Down
 
     std::unordered_map<Hash_type, HeatInt_type> seenHashes;
 
     while (!q.empty()) {
-      const auto curr = std::move(q.front());
+      const auto curr = std::move(q.top());
       q.pop();
       const auto& [i, j]      = curr.pos;
       const auto& [di, dj]    = curr.dir;
       const auto& numSteps    = curr.numSteps;
       const auto& numStepsDir = curr.numStepsDir;
       const auto& heatLoss    = curr.heatLoss;
-      if (heatLoss >= minLoss) {
-        continue;
-      }
       if (i == n - 1 && j == m - 1) {
-        minLoss = std::min(minLoss, heatLoss);
-        continue;
+        minLoss = heatLoss;
+        break;
       }
       const auto hash = curr.Hash();
       if (auto seenHashIt = seenHashes.find(hash); seenHashIt != seenHashes.end()) {
@@ -115,27 +116,24 @@ struct day_17 : public Advent_type {
 
     HeatInt_type minLoss = std::numeric_limits<HeatInt_type>::max();
 
-    std::queue<State> q;
+    std::priority_queue<State, std::vector<State>, std::greater<State>> q;
     q.emplace(Pos_type{0, 0}, Dir_type{1, 0});  // Right
     q.emplace(Pos_type{0, 0}, Dir_type{0, 1});  // Down
 
     std::unordered_map<Hash_type, HeatInt_type> seenHashes;
 
     while (!q.empty()) {
-      const auto curr = std::move(q.front());
+      const auto curr = std::move(q.top());
       q.pop();
       const auto& [i, j]      = curr.pos;
       const auto& [di, dj]    = curr.dir;
       const auto& numSteps    = curr.numSteps;
       const auto& numStepsDir = curr.numStepsDir;
       const auto& heatLoss    = curr.heatLoss;
-      if (heatLoss >= minLoss) {
-        continue;
-      }
       if (i == n - 1 && j == m - 1) {
         if (numStepsDir >= minStepsDir) {
-          minLoss = std::min(minLoss, heatLoss);
-          continue;
+          minLoss = heatLoss;
+          break;
         }
       }
       const auto hash = curr.Hash();

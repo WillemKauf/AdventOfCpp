@@ -1,7 +1,7 @@
 /////////////////
 //// std
 /////////////////
-#include <stack>
+#include <cstdint>
 
 /////////////////
 //// local
@@ -17,8 +17,14 @@ struct day_13 : public Advent_type {
   static constexpr int date            = 13;
   const std::vector<std::string> input = read_lines<std::string>(year, date);
 
+  using Hash_type  = uint32_t;
   using Grid_type  = std::vector<std::string>;
   using Grids_type = std::vector<Grid_type>;
+
+  enum class AxisType {
+    HORIZONTAL,
+    VERTICAL
+  };
 
   Grids_type ParseInput() const {
     Grids_type grids;
@@ -39,79 +45,85 @@ struct day_13 : public Advent_type {
 
   const Grids_type grids = ParseInput();
 
-  enum class AxisType {
-    HORIZONTAL,
-    VERTICAL
-  };
-
-  using Hash_type = uint32_t;
-
   template <typename T>
   Hash_type Hash(const T& t) const {
     Hash_type hash = {};
-    for(const auto& [index, c] : std::views::enumerate(t)){
+    for (const auto& [index, c] : std::views::enumerate(t)) {
       const Hash_type v = (c == '.') ? 0 : 1;
       hash |= (v << index);
     }
     return hash;
   }
 
-  /*
-  xxxxx0123443210
-  0123443210yyyyy
-  because if we had xxxxx0123443210yyyyy we wouldn't have a perfect match.
-  the length of x/y section shouldn't matter, even if x section includes some symmetrical sections.
-  i.e
-  xxxxxx |
-  012210 | 34566543
-  */
-  template <AxisType axisType, bool partTwo = false>
-  std::optional<std::size_t> GetReflectionImpl(const Grid_type& grid) const {
-    std::stack<Hash_type> st;
+  static bool compareFunctionEq(Hash_type a, Hash_type b) { return a == b; }
+
+  static bool compareFunctionOffByOne(Hash_type a, Hash_type b) {
+    Hash_type xorResult  = a ^ b;
+    uint8_t countSetBits = 0;
+    while (xorResult) {
+      countSetBits += xorResult & 1;
+      xorResult >>= 1;
+    }
+    return (countSetBits == 1);
+  }
+
+  template <bool partTwo = false>
+  bool TestReflection(std::size_t p, const Grid_type& grid, bool hasOffByOne = false) const {
     const auto n = grid.size();
-    const auto compareFunctionEq = [](const auto& a, const auto& b) { return a == b; };
-    const auto compareFunction = [](const auto& a, const auto& b) {
-      int xorResult    = a ^ b;
-      int countSetBits = 0;
-      while (xorResult) {
-        countSetBits += xorResult & 1;
-        xorResult >>= 1;
-      }
-      return countSetBits == 1;
-    };
-    for (std::size_t p = 0; p < n; ++p) {
-      const auto hashP = Hash(grid[p]);
-      if (!st.empty() && (compareFunctionEq(hashP,st.top()) || compareFunction(hashP,st.top()))) {
-      //if (!st.empty() && (hashP == st.top())) {
-        bool oneWrong = true;
-        const auto currPos = p;
-        auto stCpy         = st;
-        auto hash          = hashP;
-        for (; (!stCpy.empty()) && (p < n); ++p) {
-          hash = Hash(grid[p]);
-          //PartOne
-          //if(!compareFunctionEq(hash, stCpy.top())){
-          //  break;
-          //}
-          if(!compareFunctionEq(hash, stCpy.top())){
-            if(oneWrong && compareFunction(hash, stCpy.top())){
-              oneWrong = false;
-            }else{
-              break;
-            }
-          }
-          st.push(hash);
-          stCpy.pop();
-        }
-        const auto dist = p - currPos;
-        if ((p == n) || (currPos - dist == 0)) {
-          if(!oneWrong){
-            return currPos;
-          }
-        }
-        st.push(hash);
+    int pOne     = p - 2;
+    int pTwo     = p + 1;
+    if (pOne < 0 || pTwo >= n) {
+      if constexpr (partTwo) {
+        return hasOffByOne;
       } else {
-        st.push(hashP);
+        return true;
+      }
+    }
+
+    for (; pOne >= 0 && pTwo < n; --pOne, ++pTwo) {
+      const auto hashA = Hash(grid[pOne]);
+      const auto hashB = Hash(grid[pTwo]);
+      if constexpr (partTwo) {
+        if (!compareFunctionEq(hashA, hashB)) {
+          if (!hasOffByOne && compareFunctionOffByOne(hashA, hashB)) {
+            hasOffByOne = true;
+          } else {
+            return false;
+          }
+        }
+      } else {
+        if (!compareFunctionEq(hashA, hashB)) {
+          return false;
+        }
+      }
+    }
+
+    if constexpr (partTwo) {
+      return hasOffByOne;
+    } else {
+      return true;
+    }
+  }
+
+  template <bool partTwo = false>
+  std::optional<std::size_t> GetReflectionImpl(const Grid_type& grid) const {
+    const auto n = grid.size();
+    for (std::size_t p = 1; p < n; ++p) {
+      const auto hashA = Hash(grid[p - 1]);
+      const auto hashB = Hash(grid[p]);
+      if constexpr (partTwo) {
+        const auto hasOffByOne = compareFunctionOffByOne(hashA, hashB);
+        if (compareFunctionEq(hashA, hashB) || hasOffByOne) {
+          if (TestReflection<partTwo>(p, grid, hasOffByOne)) {
+            return p;
+          }
+        }
+      } else {
+        if (compareFunctionEq(hashA, hashB)) {
+          if (TestReflection<partTwo>(p, grid)) {
+            return p;
+          }
+        }
       }
     }
     return std::nullopt;
@@ -120,31 +132,25 @@ struct day_13 : public Advent_type {
   template <AxisType axisType, bool partTwo = false>
   auto GetReflection(const Grid_type& grid) const {
     if constexpr (axisType == AxisType::HORIZONTAL) {
-      return GetReflectionImpl<axisType, partTwo>(grid);
+      return GetReflectionImpl<partTwo>(grid);
     } else {
-      return GetReflectionImpl<axisType, partTwo>(Algorithm::TransposeGrid(grid));
+      return GetReflectionImpl<partTwo>(Algorithm::TransposeGrid(grid));
     }
   }
-
-  std::unordered_map<int, std::pair<int, AxisType>> mp;
 
   std::string part_1() override {
     int sm = 0;
     for (const auto& [index, grid] : std::views::enumerate(grids)) {
       const auto vReflOpt = GetReflection<AxisType::VERTICAL>(grid);
-      const auto hReflOpt = GetReflection<AxisType::HORIZONTAL>(grid);
       if (vReflOpt.has_value()) {
-        mp[index] = {vReflOpt.value(), AxisType::VERTICAL};
         sm += vReflOpt.value();
-      } else if (hReflOpt.has_value()) {
-        mp[index] = {hReflOpt.value(), AxisType::HORIZONTAL};
-        sm += 100 * hReflOpt.value();
       } else {
-        for(const auto& row : grid){
-          std::cout << row << '\n';
+        const auto hReflOpt = GetReflection<AxisType::HORIZONTAL>(grid);
+        if (hReflOpt.has_value()) {
+          sm += 100 * hReflOpt.value();
+        } else {
+          throw std::runtime_error("No value for either reflection");
         }
-        std::cout << '\n';
-        throw std::runtime_error("No value for either reflection");
       }
     }
     return std::to_string(sm);
@@ -153,16 +159,16 @@ struct day_13 : public Advent_type {
   std::string part_2() override {
     int sm = 0;
     for (const auto& [index, grid] : std::views::enumerate(grids)) {
-      const auto vReflOpt = GetReflection<AxisType::VERTICAL>(grid);
-      const auto hReflOpt = GetReflection<AxisType::HORIZONTAL>(grid);
+      const auto vReflOpt = GetReflection<AxisType::VERTICAL, true>(grid);
       if (vReflOpt.has_value()) {
-        mp[index] = {vReflOpt.value(), AxisType::VERTICAL};
         sm += vReflOpt.value();
-      } else if (hReflOpt.has_value()) {
-        mp[index] = {hReflOpt.value(), AxisType::HORIZONTAL};
-        sm += 100 * hReflOpt.value();
       } else {
-        throw std::runtime_error("No value for either reflection");
+        const auto hReflOpt = GetReflection<AxisType::HORIZONTAL, true>(grid);
+        if (hReflOpt.has_value()) {
+          sm += 100 * hReflOpt.value();
+        } else {
+          throw std::runtime_error("No value for either reflection");
+        }
       }
     }
     return std::to_string(sm);

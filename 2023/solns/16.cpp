@@ -72,28 +72,28 @@ struct day_16 : public Advent_type {
         const auto& c = input[jj][ii];
         switch (c) {
           case '.': {
-            q.emplace(std::pair(ii, jj), dir);
+            q.emplace(Pair_type{ii, jj}, dir);
             break;
           }
           case '|': {
             if (!dir.first) {
               // Moving vertically
-              q.emplace(std::pair(ii, jj), dir);
+              q.emplace(Pair_type{ii, jj}, dir);
             } else {
               // Moving horizontally, push back two beams
-              q.emplace(std::pair(ii, jj), std::pair(0, -1));
-              q.emplace(std::pair(ii, jj), std::pair(0, 1));
+              q.emplace(Pair_type{ii, jj}, Pair_type{0, -1});
+              q.emplace(Pair_type{ii, jj}, Pair_type{0, 1});
             }
             break;
           }
           case '-': {
             if (!dir.second) {
               // Moving horizontally
-              q.emplace(std::pair(ii, jj), dir);
+              q.emplace(Pair_type{ii, jj}, dir);
             } else {
               // Moving vertically, push back two beams
-              q.emplace(std::pair(ii, jj), std::pair(-1, 0));
-              q.emplace(std::pair(ii, jj), std::pair(1, 0));
+              q.emplace(Pair_type{ii, jj}, Pair_type{-1, 0});
+              q.emplace(Pair_type{ii, jj}, Pair_type{1, 0});
             }
             break;
           }
@@ -102,19 +102,19 @@ struct day_16 : public Advent_type {
               // Moving horizontally
               if (dir.first > 0) {
                 // Approaching from left
-                q.emplace(std::pair(ii, jj), std::pair(0, 1));
+                q.emplace(Pair_type{ii, jj}, Pair_type{0, 1});
               } else {
                 // Approaching from right
-                q.emplace(std::pair(ii, jj), std::pair(0, -1));
+                q.emplace(Pair_type{ii, jj}, Pair_type{0, -1});
               }
             } else {
               // Moving vertically
               if (dir.second > 0) {
                 // Approaching from top
-                q.emplace(std::pair(ii, jj), std::pair(1, 0));
+                q.emplace(Pair_type{ii, jj}, Pair_type{1, 0});
               } else {
                 // Approaching from bottom
-                q.emplace(std::pair(ii, jj), std::pair(-1, 0));
+                q.emplace(Pair_type{ii, jj}, Pair_type{-1, 0});
               }
             }
             break;
@@ -124,19 +124,19 @@ struct day_16 : public Advent_type {
               // Moving horizontally
               if (dir.first > 0) {
                 // Approaching from left
-                q.emplace(std::pair(ii, jj), std::pair(0, -1));
+                q.emplace(Pair_type{ii, jj}, Pair_type{0, -1});
               } else {
                 // Approaching from right
-                q.emplace(std::pair(ii, jj), std::pair(0, 1));
+                q.emplace(Pair_type{ii, jj}, Pair_type{0, 1});
               }
             } else {
               // Moving vertically
               if (dir.second > 0) {
                 // Approaching from top
-                q.emplace(std::pair(ii, jj), std::pair(-1, 0));
+                q.emplace(Pair_type{ii, jj}, Pair_type{-1, 0});
               } else {
                 // Approaching from bottom
-                q.emplace(std::pair(ii, jj), std::pair(1, 0));
+                q.emplace(Pair_type{ii, jj}, Pair_type{1, 0});
               }
             }
             break;

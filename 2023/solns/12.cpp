@@ -107,7 +107,6 @@ struct day_12 : public Advent_type {
   template <bool partTwo = false>
   Int_type GetArrangements() const {
     const Vec_type inputVec = ParseInput<partTwo>();
-    Int_type ans            = 0;
     return std::accumulate(inputVec.begin(), inputVec.end(), Int_type{0},
                            [&](Int_type sm, const auto& v) {
                              Cache_type dp;

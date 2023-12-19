@@ -159,6 +159,15 @@ inline std::bitset<n> HexToBin(const T& t) {
   return b;
 }
 
+template <typename Int_T=int>
+Int_T HexToDec(std::string_view hex){
+  Int_T dec;
+  std::stringstream ss;
+  ss << std::hex << hex;
+  ss >> dec;
+  return dec;
+}
+
 template <typename Set_type>
 inline Set_type SetIntersection(const Set_type& sOne, const Set_type& sTwo) {
   Set_type setIntersection;

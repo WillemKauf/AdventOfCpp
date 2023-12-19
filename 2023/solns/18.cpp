@@ -198,8 +198,8 @@ struct day_18 : public Advent_type {
   std::string part_1() override { return std::to_string(Solve()); }
 
   std::string part_2() override {
-    uint64_t I                                            = 0;
-    uint64_t P                                            = 0;
+    uint64_t A                                            = 0;
+    uint64_t B                                            = 0;
     uint64_t x                                            = 0;
     uint64_t y                                            = 0;
     const std::unordered_map<char, Pos_type> directionMap = {
@@ -212,11 +212,11 @@ struct day_18 : public Advent_type {
       const auto dy        = dd.second * numSteps;
       x += dx;
       y += dy;
-      I += x * dy;
-      P += numSteps;
+      A += x * dy;
+      B += numSteps;
     });
-    const auto A = I + P / 2 + 1;
-    return std::to_string(A);
+    const auto I = A + B / 2 + 1;
+    return std::to_string(I);
   }
 };
 

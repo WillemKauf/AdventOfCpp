@@ -81,7 +81,7 @@ struct day_04 : public Advent_type {
 
     int ans = numMatching;
     for (int i = 1; i <= numMatching; ++i) {
-      ans += Recurse(i + p);
+      ans += Recurse(p + i);
     }
 
     numCards.insert_or_assign(p, ans);

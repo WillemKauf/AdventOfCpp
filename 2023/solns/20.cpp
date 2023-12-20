@@ -81,7 +81,7 @@ struct day_20 : public Advent_type {
 
   std::unordered_map<PulseType, int> pulseCounters;
 
-  void SendPulse(uint64_t i, const std::string& moduleStr = "broadcaster",
+  void SendPulse(const std::string& moduleStr = "broadcaster",
                  const PulseType& pulseType = PulseType::LOW) {
     std::vector<std::pair<std::string, PulseType>> pulsesToSend;
 
@@ -107,7 +107,7 @@ struct day_20 : public Advent_type {
     }
 
     for (const auto& [child, toSendPulseType] : pulsesToSend) {
-      SendPulse(i, child, toSendPulseType);
+      SendPulse(child, toSendPulseType);
     }
   }
 
@@ -116,7 +116,7 @@ struct day_20 : public Advent_type {
 
     for (int i = 0; i < numPresses; ++i) {
       ++pulseCounters[PulseType::LOW];
-      SendPulse(i);
+      SendPulse();
     }
 
     return std::to_string(pulseCounters.at(PulseType::LOW) * pulseCounters.at(PulseType::HIGH));
@@ -124,8 +124,9 @@ struct day_20 : public Advent_type {
 
   std::string part_2() override {
     inputStruct = ParseInput();
-    //to do tomorrow after sleep
-    //Probably some sort of reverse-engineering/cycle detection of conjunction modules that feed into final register
+    // to do tomorrow after sleep
+    // Probably some sort of reverse-engineering/cycle detection of conjunction modules that feed
+    // into final register
     return "";
   }
 };

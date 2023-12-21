@@ -75,19 +75,30 @@ struct day_20 : public Advent_type {
     return {moduleMap, connectionMap};
   }
 
-  Input inputStruct                 = ParseInput();
-  ModuleMap_type& moduleMap         = inputStruct.moduleMap;
-  ConnectionMap_type& connectionMap = inputStruct.connectionMap;
+  const Input inputStruct                 = ParseInput();
+  const ModuleMap_type& moduleMap         = inputStruct.moduleMap;
+  const ConnectionMap_type& connectionMap = inputStruct.connectionMap;
 
   std::unordered_map<PulseType, int> pulseCounters;
-
-  void SendPulse(const std::string& moduleStr = "broadcaster",
+  std::unordered_set<uint64_t> cycleCounters;
+  template <bool partTwo = false>
+  void SendPulse(int i, const std::string& moduleStr = "broadcaster",
                  const PulseType& pulseType = PulseType::LOW) {
-    std::vector<std::pair<std::string, PulseType>> pulsesToSend;
-
-    for (const auto& child : connectionMap.at(moduleStr)) {
+    static auto moduleMapCpy     = moduleMap;
+    static auto connectionMapCpy = connectionMap;
+    using Pair_type              = std::pair<std::string, PulseType>;
+    std::vector<Pair_type> pulsesToSend;
+    if constexpr (partTwo) {
+      // Hardcoded, I guess.
+      if (moduleStr == "qk" || moduleStr == "kf" || moduleStr == "kr" || moduleStr == "zs") {
+        if (pulseType == PulseType::HIGH) {
+          cycleCounters.insert(i);
+        }
+      }
+    }
+    for (const auto& child : connectionMapCpy.at(moduleStr)) {
       ++pulseCounters[pulseType];
-      if (auto moduleMapIt = moduleMap.find(child); moduleMapIt != moduleMap.end()) {
+      if (auto moduleMapIt = moduleMapCpy.find(child); moduleMapIt != moduleMapCpy.end()) {
         auto& childModule = moduleMapIt->second;
         if (childModule.moduleType == ModuleType::FLIPFLOP) {
           if (pulseType == PulseType::LOW) {
@@ -107,7 +118,7 @@ struct day_20 : public Advent_type {
     }
 
     for (const auto& [child, toSendPulseType] : pulsesToSend) {
-      SendPulse(child, toSendPulseType);
+      SendPulse<partTwo>(i, child, toSendPulseType);
     }
   }
 
@@ -116,18 +127,21 @@ struct day_20 : public Advent_type {
 
     for (int i = 0; i < numPresses; ++i) {
       ++pulseCounters[PulseType::LOW];
-      SendPulse();
+      SendPulse(i);
     }
 
     return std::to_string(pulseCounters.at(PulseType::LOW) * pulseCounters.at(PulseType::HIGH));
   }
 
   std::string part_2() override {
-    inputStruct = ParseInput();
-    // to do tomorrow after sleep
-    // Probably some sort of reverse-engineering/cycle detection of conjunction modules that feed
-    // into final register
-    return "";
+    for (int i = 1; true; ++i) {
+      SendPulse<true>(i);
+      if (cycleCounters.size() == 4) {
+        break;
+      }
+    }
+
+    return std::to_string(Algorithm::LCM(cycleCounters));
   }
 };
 

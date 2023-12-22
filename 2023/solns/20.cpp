@@ -81,6 +81,7 @@ struct day_20 : public Advent_type {
 
   std::unordered_map<PulseType, int> pulseCounters;
   std::unordered_set<uint64_t> cycleCounters;
+
   template <bool partTwo = false>
   void SendPulse(int i, const std::string& moduleStr = "broadcaster",
                  const PulseType& pulseType = PulseType::LOW) {

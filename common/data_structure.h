@@ -50,7 +50,7 @@ template <typename Value_T, typename Int_T, bool Sort>
 using OrderingMap_t =
     std::conditional_t<Sort, std::map<Value_T, Int_T>, std::unordered_map<Value_T, Int_T>>;
 
-template <typename Container_T, typename Int_T=int, bool Sort = false>
+template <typename Container_T, typename Int_T = int, bool Sort = false>
 class Counter {
 private:
   using FrequencyInteger_type = Int_T;
@@ -70,20 +70,21 @@ public:
     }
   }
 
-  template<bool Descending=false>
+  template <bool Descending = false>
   sorted_by_freq get_sorted_by_freq() const {
     sorted_by_freq freqVals(freqMap.begin(), freqMap.end());
-    if constexpr(Descending){
+    if constexpr (Descending) {
       std::sort(freqVals.begin(), freqVals.end(),
                 [](const auto& a, const auto& b) { return a.second > b.second; });
-    }else{
+    } else {
       std::sort(freqVals.begin(), freqVals.end(),
                 [](const auto& a, const auto& b) { return a.second < b.second; });
     }
     return freqVals;
   }
 
-  FrequencyInteger_type operator[](const ContainerValue_type& k) const { return freqMap[k]; }
+  FrequencyInteger_type operator[](const ContainerValue_type& k) { return freqMap[k]; }
+  FrequencyInteger_type at(const ContainerValue_type& k) const { return freqMap.at(k); }
 
   size_type size() const noexcept { return freqMap.size(); }
 

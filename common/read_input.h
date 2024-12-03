@@ -21,6 +21,7 @@
 /////////////////
 //// local
 /////////////////
+#include "advent_base.h"
 #include "config.h"
 
 inline auto get_input_file(int year, int date) {
@@ -96,9 +97,29 @@ inline auto read_lines_vector(int year, int date) {
   return input;
 }
 
-template <typename T, typename... Ts>
+// Concept to check if a type has a static bool collect_position
+template <typename T>
+concept HasCollectPosition = requires {
+  { T::collect_position } -> std::convertible_to<const bool>;
+};
+
+template <typename T>
+T string_to_value_type(const std::string& str) {
+  if constexpr (std::is_same_v<T, int>) {
+    return std::stoi(str);
+  } else if constexpr (std::is_same_v<T, long> || std::is_same_v<T, uint32_t>) {
+    return std::stol(str);
+  } else if constexpr (std::is_same_v<T, char>) {
+    return str[0];
+  } else {
+    return str;
+  }
+}
+
+template <typename T, bool Flatten = false, typename... Ts>
 inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex_strs) {
-  std::vector<std::vector<T>> input;
+  using Return_type = std::conditional_t<Flatten, std::vector<T>, std::vector<std::vector<T>>>;
+  Return_type input;
   {
     std::vector<boost::regex> regexVec{boost::regex(std::forward<Ts>(regex_strs))...};
     std::ifstream in_file(input_file);
@@ -111,54 +132,53 @@ inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex
       std::string string = iss.str();
       for (const auto& regex : regexVec) {
         boost::sregex_iterator iterator(string.begin(), string.end(), regex);
-        const auto shouldBreak = iterator != boost::sregex_iterator();
         while (iterator != boost::sregex_iterator()) {
           boost::smatch match = *iterator;
           if (match.size() == 1) {
-            if constexpr (std::is_same_v<T, int>) {
-              line_vec.push_back(std::stoi(match.str()));
-            } else if constexpr (std::is_same_v<T, long> || std::is_same_v<T, uint32_t>) {
-              line_vec.push_back(std::stol(match.str()));
-            }else if constexpr (std::is_same_v<T, char>) {
-              line_vec.push_back(match.str()[0]);
+            if constexpr (HasCollectPosition<T>) {
+              T res;
+              res.v = string_to_value_type<typename T::Value_type>(match.str());
+              res.p = match.position();
+              line_vec.push_back(std::move(res));
             } else {
-              line_vec.push_back(match.str());
+              line_vec.push_back(string_to_value_type<T>(match.str()));
             }
           } else if (match.size() > 1) {
             for (int i = 1; i < match.size(); ++i) {
               const auto& group = match[i];
               if (group.length() == 0) continue;
-              if constexpr (std::is_same_v<T, int>) {
-                line_vec.push_back(std::stoi(group.str()));
-              } else if constexpr (std::is_same_v<T, long> || std::is_same_v<T, uint32_t>) {
-                line_vec.push_back(std::stol(group.str()));
-              }else if constexpr (std::is_same_v<T, char>) {
-                line_vec.push_back(group.str()[0]);
+              if constexpr (HasCollectPosition<T>) {
+                T res;
+                res.v = string_to_value_type<typename T::Value_type>(group.str());
+                res.p = match.position();
+                line_vec.push_back(std::move(res));
               } else {
-                line_vec.push_back(group.str());
+                line_vec.push_back(string_to_value_type<T>(group.str()));
               }
             }
           }
           ++iterator;
         }
-
-        if (shouldBreak) {
-          break;
-        }
       }
 
       if (!line_vec.empty()) {
-        input.push_back(line_vec);
+        if constexpr (Flatten) {
+          for (auto& line : line_vec) {
+            input.push_back(std::move(line));
+          }
+        } else {
+          input.push_back(std::move(line_vec));
+        }
       }
     }
   }
   return input;
 }
 
-template <typename T, typename... Ts>
+template <typename T, bool Flatten = false, typename... Ts>
 inline auto read_lines_vector_regex(int year, int date, Ts&&... regex_strs) {
   const std::string input_file = get_input_file(year, date);
-  return read_lines_vector_regex<T>(input_file, std::forward<Ts>(regex_strs)...);
+  return read_lines_vector_regex<T, Flatten>(input_file, std::forward<Ts>(regex_strs)...);
 }
 
 #endif

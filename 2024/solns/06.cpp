@@ -59,8 +59,10 @@ struct day_06 : public Advent_type {
   const size_t m        = grid.size();
   const size_t n        = grid[0].size();
 
+  Set_type seen;
+
   template <bool part_two = false>
-  bool path_find(Set_type* seen = nullptr) const {
+  bool path_find() {
     size_t x                                     = start_x;
     size_t y                                     = start_y;
     std::complex<int> dd                         = {0, -1};
@@ -75,7 +77,7 @@ struct day_06 : public Advent_type {
           break;
         }
       } else {
-        seen->insert(Grid::HashIndex<uint32_t>(x, y, n));
+        seen.insert(Grid::HashIndex<uint32_t>(x, y, n));
       }
       const auto nx = x + dd.real();
       const auto ny = y + dd.imag();
@@ -91,25 +93,20 @@ struct day_06 : public Advent_type {
   }
 
   std::string part_1() override {
-    Set_type seen;
-    path_find(&seen);
+    path_find();
     return std::to_string(seen.size());
   }
 
   std::string part_2() override {
-    int res = 0;
-    for (size_t j = 0; j < m; ++j) {
-      for (size_t i = 0; i < n; ++i) {
-        if (grid[j][i] != '.') {
-          continue;
-        }
-        grid[j][i] = '#';
-        res += path_find<true>();
-        grid[j][i] = '.';
-      }
-    }
-
-    return std::to_string(res);
+    return std::to_string(std::accumulate(seen.begin(), seen.end(), uint32_t{0},
+                                          [this](uint32_t s, const uint32_t hash) {
+                                            size_t j   = hash / n;
+                                            size_t i   = hash % n;
+                                            grid[j][i] = '#';
+                                            s += path_find<true>();
+                                            grid[j][i] = '.';
+                                            return s;
+                                          }));
   }
 };
 

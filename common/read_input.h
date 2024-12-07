@@ -107,8 +107,12 @@ template <typename T>
 T string_to_value_type(const std::string& str) {
   if constexpr (std::is_same_v<T, int>) {
     return std::stoi(str);
-  } else if constexpr (std::is_same_v<T, long> || std::is_same_v<T, uint32_t>) {
+  } else if constexpr (std::is_same_v<T, long>) {
     return std::stol(str);
+  } else if constexpr (std::is_same_v<T, uint32_t>) {
+    return std::stoul(str);
+  } else if constexpr (std::is_same_v<T, uint64_t>) {
+    return std::stoull(str);
   } else if constexpr (std::is_same_v<T, char>) {
     return str[0];
   } else {

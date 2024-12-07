@@ -46,8 +46,20 @@ inline bool InBounds(auto i, auto j, auto n, auto m) {
 }
 
 template <typename T>
-inline T HashIndex(T i, T j, T n) {
-  return T{i + j * n};
+inline T HashIndex(auto i, auto j, auto n) {
+  return T(i + j * n);
+}
+
+template <typename T>
+inline T HashIndexAndDirection(auto i, auto j, auto di, auto dj, auto n, auto m) {
+  return T(i + j * n + ((di + 1) + (dj + 1) * 3) * n * m);
+}
+
+template <typename T>
+inline std::tuple<T, T> HashToPosition(auto hash, auto n) {
+  T j = hash / n;
+  T i = hash % n;
+  return {i, j};
 }
 
 enum class HexGridDirections {

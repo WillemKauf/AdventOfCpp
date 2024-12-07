@@ -100,9 +100,8 @@ struct day_06 : public Advent_type {
   std::string part_2() override {
     return std::to_string(std::accumulate(seen.begin(), seen.end(), uint32_t{0},
                                           [this](uint32_t s, const uint32_t hash) {
-                                            size_t j   = hash / n;
-                                            size_t i   = hash % n;
-                                            grid[j][i] = '#';
+                                            auto [i, j] = Grid::HashToPosition<size_t>(hash, n);
+                                            grid[j][i]  = '#';
                                             s += path_find<true>();
                                             grid[j][i] = '.';
                                             return s;

@@ -58,12 +58,8 @@ struct day_09 : public Advent_type {
 
   const Vec_type input_map = ParseInput();
 
-  std::string part_1() override {
-    uint64_t res   = 0;
-    Vec_type vec   = input_map;
-    int p2         = vec.size() - 1;
-    int true_index = 0;
-    for (int p1 = 0; p1 < vec.size(); ++p1) {
+  struct part_1_impl {
+    static void do_rearrange(int& p1, int& p2, Vec_type& vec) {
       auto& id_and_size_p1 = vec[p1];
       while (p2 > p1 && id_and_size_p1.capacity > 0) {
         auto& id_and_size_p2 = vec[p2];
@@ -81,23 +77,13 @@ struct day_09 : public Advent_type {
           p2 -= 2;
         }
       }
-
-      for (const auto& [id, size] : std::views::zip(id_and_size_p1.id, id_and_size_p1.size)) {
-        for (int i = 0; i < size; ++i, ++true_index) {
-          res += id * true_index;
-        }
-      }
     }
-    return std::to_string(res);
-  }
+  };
 
-  std::string part_2() override {
-    uint64_t res   = 0;
-    Vec_type vec   = input_map;
-    int true_index = 0;
-    for (int p1 = 0; p1 < vec.size(); ++p1) {
+  struct part_2_impl {
+    static void do_rearrange(int& p1, int& p2, Vec_type& vec) {
       auto& id_and_size_p1 = vec[p1];
-      int p2               = vec.size() - 1;
+      p2                   = vec.size() - 1;
       while (p2 > p1 && id_and_size_p1.capacity > 0) {
         auto& id_and_size_p2   = vec[p2];
         auto& capacity_p1      = id_and_size_p1.capacity;
@@ -114,7 +100,19 @@ struct day_09 : public Advent_type {
         }
         p2 -= 2;
       }
+    }
+  };
 
+  template <typename impl>
+  uint64_t rearrange_impl() const {
+    uint64_t res   = 0;
+    Vec_type vec   = input_map;
+    int p2         = vec.size() - 1;
+    int true_index = 0;
+    for (int p1 = 0; p1 < vec.size(); ++p1) {
+      impl::do_rearrange(p1, p2, vec);
+
+      auto& id_and_size_p1 = vec[p1];
       for (const auto& [id, size] : std::views::zip(id_and_size_p1.id, id_and_size_p1.size)) {
         for (int i = 0; i < size; ++i, ++true_index) {
           res += id * true_index;
@@ -122,8 +120,12 @@ struct day_09 : public Advent_type {
       }
       true_index += id_and_size_p1.capacity;
     }
-    return std::to_string(res);
+    return res;
   }
+
+  std::string part_1() override { return std::to_string(rearrange_impl<part_1_impl>()); }
+
+  std::string part_2() override { return std::to_string(rearrange_impl<part_2_impl>()); }
 };
 
 }  // namespace AOC2024

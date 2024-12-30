@@ -6,6 +6,7 @@
 /////////////////
 #include <algorithm>
 #include <bitset>
+#include <cmath>
 #include <deque>
 #include <functional>
 #include <limits>
@@ -159,8 +160,8 @@ inline std::bitset<n> HexToBin(const T& t) {
   return b;
 }
 
-template <typename Int_T=int>
-Int_T HexToDec(std::string_view hex){
+template <typename Int_T = int>
+Int_T HexToDec(std::string_view hex) {
   Int_T dec;
   std::stringstream ss;
   ss << std::hex << hex;
@@ -206,7 +207,7 @@ inline Set_type SetUnion(const Set_type& sOne, const Set_type& sTwo) {
 }
 
 template <typename Grid_type>
-inline Grid_type TransposeGrid(const Grid_type& grid){
+inline Grid_type TransposeGrid(const Grid_type& grid) {
   const auto m = grid.size();
   const auto n = grid[0].size();
   Grid_type cols(n);
@@ -219,6 +220,11 @@ inline Grid_type TransposeGrid(const Grid_type& grid){
     }
   }
   return cols;
+}
+
+template <typename T>
+inline T DigitCount(T n) {
+  return n > 0 ? static_cast<int>(std::log10(n)) + 1 : 1;
 }
 
 }  // namespace Algorithm

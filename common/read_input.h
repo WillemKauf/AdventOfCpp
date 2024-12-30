@@ -24,6 +24,32 @@
 #include "advent_base.h"
 #include "config.h"
 
+template <typename T>
+T to_value_type(const std::string& str) {
+  if constexpr (std::is_same_v<T, int>) {
+    return std::stoi(str);
+  } else if constexpr (std::is_same_v<T, long>) {
+    return std::stol(str);
+  } else if constexpr (std::is_same_v<T, uint32_t>) {
+    return std::stoul(str);
+  } else if constexpr (std::is_same_v<T, uint64_t>) {
+    return std::stoull(str);
+  } else if constexpr (std::is_same_v<T, char>) {
+    return str[0];
+  } else {
+    return str;
+  }
+}
+
+template <typename T>
+T to_value_type(char c) {
+  if constexpr (std::is_same_v<T, char>) {
+    return c;
+  } else {
+    return T(c - '0');
+  }
+}
+
 inline auto get_input_file(int year, int date) {
   return ROOT_DIR + std::to_string(year) + "/input/input" + std::to_string(date) + ".txt";
 }
@@ -74,9 +100,10 @@ inline auto read_single_line(int year, int date) {
   return input;
 }
 
+template <typename T = char>
 inline auto read_lines_vector(int year, int date) {
   const std::string input_file = get_input_file(year, date);
-  std::vector<std::vector<char>> input;
+  std::vector<std::vector<T>> input;
   {
     std::ifstream in_file(input_file);
     if (!in_file.is_open()) {
@@ -84,11 +111,11 @@ inline auto read_lines_vector(int year, int date) {
     }
     for (std::string line; std::getline(in_file, line);) {
       std::istringstream string(line);
-      std::vector<char> line_vec;
+      std::vector<T> line_vec;
       std::string s;
       while (string >> s) {
         for (const auto& c : s) {
-          line_vec.push_back(c);
+          line_vec.push_back(to_value_type<T>(c));
         }
       }
       input.push_back(line_vec);
@@ -102,23 +129,6 @@ template <typename T>
 concept HasCollectPosition = requires {
   { T::collect_position } -> std::convertible_to<const bool>;
 };
-
-template <typename T>
-T string_to_value_type(const std::string& str) {
-  if constexpr (std::is_same_v<T, int>) {
-    return std::stoi(str);
-  } else if constexpr (std::is_same_v<T, long>) {
-    return std::stol(str);
-  } else if constexpr (std::is_same_v<T, uint32_t>) {
-    return std::stoul(str);
-  } else if constexpr (std::is_same_v<T, uint64_t>) {
-    return std::stoull(str);
-  } else if constexpr (std::is_same_v<T, char>) {
-    return str[0];
-  } else {
-    return str;
-  }
-}
 
 template <typename T, bool Flatten = false, typename... Ts>
 inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex_strs) {
@@ -141,11 +151,11 @@ inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex
           if (match.size() == 1) {
             if constexpr (HasCollectPosition<T>) {
               T res;
-              res.v = string_to_value_type<typename T::Value_type>(match.str());
+              res.v = to_value_type<typename T::Value_type>(match.str());
               res.p = match.position();
               line_vec.push_back(std::move(res));
             } else {
-              line_vec.push_back(string_to_value_type<T>(match.str()));
+              line_vec.push_back(to_value_type<T>(match.str()));
             }
           } else if (match.size() > 1) {
             for (int i = 1; i < match.size(); ++i) {
@@ -153,11 +163,11 @@ inline auto read_lines_vector_regex(const std::string& input_file, Ts&&... regex
               if (group.length() == 0) continue;
               if constexpr (HasCollectPosition<T>) {
                 T res;
-                res.v = string_to_value_type<typename T::Value_type>(group.str());
+                res.v = to_value_type<typename T::Value_type>(group.str());
                 res.p = match.position();
                 line_vec.push_back(std::move(res));
               } else {
-                line_vec.push_back(string_to_value_type<T>(group.str()));
+                line_vec.push_back(to_value_type<T>(group.str()));
               }
             }
           }

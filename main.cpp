@@ -19,6 +19,7 @@ int main() {
   // AOC2021::Run();
   // AOC2022::Run();
   // AOC2023::Run();
-  AOC2024::Run();
+  // AOC2024::Run();
+  AOC2025::Run();
   return 0;
 }

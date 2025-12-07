@@ -17,9 +17,11 @@ constexpr auto numberOfDirs<GridDirection::WithoutDiagonals> = 4;
 template <>
 constexpr auto numberOfDirs<GridDirection::WithDiagonals> = 8;
 
+using Direction_type = std::array<int, 2>;
+
 template <GridDirection Diagonals = GridDirection::WithoutDiagonals>
 constexpr auto GetAllCardinalDirs() {
-  std::array<std::array<int, 2>, numberOfDirs<Diagonals>> ddirs;
+  std::array<Direction_type, numberOfDirs<Diagonals>> ddirs;
   static constexpr std::array<int, 3> ns = {-1, 0, 1};
   int index                              = 0;
   for (const auto& d : ns) {
@@ -41,6 +43,15 @@ constexpr auto GetAllCardinalDirs() {
 static constexpr auto OrthogonalDirections = GetAllCardinalDirs();
 static constexpr auto DiagonalDirections = GetAllCardinalDirs<Grid::GridDirection::WithDiagonals>();
 
+static const std::unordered_map<char, Direction_type> CharToDirectionMap = {
+    {'<', OrthogonalDirections[0]},
+    {'^', OrthogonalDirections[1]},
+    {'v', OrthogonalDirections[2]},
+    {'>', OrthogonalDirections[3]}};
+
+inline bool HasXComponent(Direction_type d) { return d[0] != 0; }
+inline bool HasYComponent(Direction_type d) { return d[1] != 0; }
+
 inline bool InBounds(auto i, auto j, auto n, auto m) {
   return (0 <= i) && (i < n) && (0 <= j) && (j < m);
 }
@@ -60,6 +71,17 @@ inline std::tuple<T, T> HashToPosition(auto hash, auto n) {
   T j = hash / n;
   T i = hash % n;
   return {i, j};
+}
+
+template <typename Grid_T>
+inline void PrintGrid(const Grid_T& grid) {
+  for (const auto& v : grid) {
+    for (const auto& vv : v) {
+      std::cout << vv;
+    }
+    std::cout << '\n';
+  }
+  std::cout << '\n';
 }
 
 enum class HexGridDirections {

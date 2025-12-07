@@ -8,6 +8,7 @@
 // #include "2022/2022.h"
 // #include "2023/2023.h"
 #include "2024/2024.h"
+#include "2025/2025.h"
 
 int main() {
   // AOC2015::Run();
@@ -19,7 +20,7 @@ int main() {
   // AOC2021::Run();
   // AOC2022::Run();
   // AOC2023::Run();
-  // AOC2024::Run();
-  AOC2025::Run();
+  AOC2024::Run();
+  // AOC2025::Run();
   return 0;
 }

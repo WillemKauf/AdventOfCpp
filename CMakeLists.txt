@@ -12,11 +12,11 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE common)
 
-find_package(OpenMP REQUIRED)
+#find_package(OpenMP REQUIRED)
 
 target_link_libraries(${PROJECT_NAME}
   crypto
-  OpenMP::OpenMP_CXX
+  #OpenMP::OpenMP_CXX
   #-fsanitize=address
   ssl)
 
@@ -27,5 +27,5 @@ target_link_libraries(${PROJECT_NAME}
 #set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
 
 #target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address -g)
-#target_compile_options(${PROJECT_NAME} PRIVATE -g)
+#target_compile_options(${PROJECT_NAME} PRIVATE -O2 -g)
 target_compile_options(${PROJECT_NAME} PRIVATE -O3)

@@ -1,3 +1,4 @@
 /build/*
 */input/*
 .cache/*
+compile_commands.json

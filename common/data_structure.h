@@ -5,6 +5,7 @@
 //// std
 /////////////////
 #include <ranges>
+#include <unordered_set>
 
 namespace DataStructure {
 
@@ -20,6 +21,14 @@ public:
   }
 
   int GetSize(int n) { return sizes[GetRoot(n)]; }
+
+  std::unordered_set<int> GetRoots() {
+    std::unordered_set<int> unique_roots;
+    for (int i = 0; i < roots.size(); ++i) {
+      unique_roots.insert(GetRoot(i));
+    }
+    return unique_roots;
+  }
 
   int GetNumSets() const { return numSets; }
 
